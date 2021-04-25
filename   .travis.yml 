@@ -9,5 +9,10 @@ python:
 # command to install dependencies
 install: pip install -e .
 # command to run tests
+notifications:
+  email:
+    recipients:
+      - hlarrea@fi.uba.ar
+    on_failure: always
 script:
   - pytest
