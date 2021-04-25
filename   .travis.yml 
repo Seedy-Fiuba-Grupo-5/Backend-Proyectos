@@ -1,17 +1,25 @@
 language: python
 python:
   - "3.6"      # current default Python on Travis CI
+
 # command to install dependencies
 install: pip install -e .
-# command to run tests
+install: pip install codecov
+
 # safelist
 branches:
   only:
   - main
+
 notifications:
   email:
     recipients:
       - hlarrea@fi.uba.ar
     on_failure: always
+
+# Run the unit test
 script:
   - pytest
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
