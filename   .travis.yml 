@@ -5,6 +5,7 @@ python:
 # command to install dependencies
 install: pip install -e .
 install: pip install codecov
+pip install pytest_cov
 
 # safelist
 branches:
@@ -19,7 +20,7 @@ notifications:
 
 # Run the unit test
 script:
-  - pytest
+  - pytest -p pytest_cov --cov
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
