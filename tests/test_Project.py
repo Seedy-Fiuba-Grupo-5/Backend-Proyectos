@@ -3,4 +3,10 @@ from src.Project import *
 
 def test_get_name():
     project = Project("prueba")
-    assert (project.get_name() == "prueba")
+    assert (project.name == "prueba")
+
+
+def test_activate_project():
+    project = Project("prueba")
+    project.activate_project()
+    assert project.isActive
