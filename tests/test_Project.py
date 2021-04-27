@@ -14,5 +14,4 @@ def test_activate_project():
 
 def test_deactivate_project():
     project = Project("prueba")
-    project.activate_project()
     assert not project.isActive
