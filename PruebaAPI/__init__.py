@@ -5,5 +5,5 @@ app = Flask(__name__)
 
 
 @app.route("/")
-def hello_world():
-    return jsonify(hello="world project")
+def Main():
+    return jsonify(hello="project")
