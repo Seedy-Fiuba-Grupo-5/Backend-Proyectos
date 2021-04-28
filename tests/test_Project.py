@@ -22,4 +22,3 @@ def test_api():
     response = requests.get("http://localhost:5000/")
     response_body = response.json()
     assert response_body["hello"] == "project"
-e
