@@ -1,3 +1,5 @@
+import requests
+
 from src.Project import *
 
 
@@ -15,3 +17,8 @@ def test_activate_project():
 def test_deactivate_project():
     project = Project("prueba")
     assert not project.isActive
+
+def test_api():
+    response = requests.get("http://localhost:5000/")
+    response_body = response.json()
+    assert response_body["hello"] == "project"
