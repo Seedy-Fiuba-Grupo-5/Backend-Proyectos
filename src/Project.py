@@ -1,7 +1,12 @@
+class Projects:
+
+    def __init__(self):
+        self.projects = []
+
+    def add_project(self, project_name):
+        self.projects.append(project_name)
+
+
 class Project:
     def __init__(self, name):
         self.name = name
-        self.isActive = False
-
-    def activate_project(self):
-        self.isActive = True

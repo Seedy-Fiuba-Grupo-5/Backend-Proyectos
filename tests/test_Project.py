@@ -2,7 +2,7 @@ import requests
 
 from src.Project import *
 
-
+'''
 def test_get_name():
     project = Project("prueba")
     assert (project.name == "prueba")
@@ -22,3 +22,10 @@ def test_api():
     response = requests.get("http://localhost:5000/")
     response_body = response.json()
     assert response_body["hello"] == "project"
+'''
+def test_post_project():
+    project = {'name': 'test project'}
+    requests.post("http://localhost:5000/projects", json=project)
+    response = requests.get("http://localhost:5000/projects")
+    response_body = response.json()
+    assert response_body[0]['name'] == "test project"
