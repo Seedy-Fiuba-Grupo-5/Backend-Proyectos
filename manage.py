@@ -1,6 +1,6 @@
 from flask.cli import FlaskGroup
 
-from PruebaAPI import app
+from API import app
 
 
 cli = FlaskGroup(app)
