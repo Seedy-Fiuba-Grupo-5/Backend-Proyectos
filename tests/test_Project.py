@@ -1,7 +1,5 @@
 import requests
 
-from src.Project import *
-
 '''
 def test_get_name():
     project = Project("prueba")

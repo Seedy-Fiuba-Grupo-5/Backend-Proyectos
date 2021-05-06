@@ -7,8 +7,3 @@ class Projects:
     def add_project(self, project_name):
         self.projects[self.id] = project_name
         self.id = self.id + 1
-
-
-class Project:
-    def __init__(self, name):
-        self.name = name
