@@ -1,9 +1,12 @@
+from App import db
+from App.BDD.projects_entry import ProjectsEntry
+
 class Projects:
 
-    def __init__(self):
-        self.projects = {}
-        self.id = 0
-
     def add_project(self, project_name):
-        self.projects[self.id] = project_name
-        self.id = self.id + 1
+        db.session.add(
+            ProjectsEntry(name=project_name))
+        db.session.commit()
+
+    def get_projects(self):
+        return [i.serialize for i in ProjectsEntry.query.all()]

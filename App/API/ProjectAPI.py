@@ -9,9 +9,8 @@ projects = Projects()
 
 @app.route("/projects", methods=["GET"])
 def get_projects():
-    return jsonify(list(projects.projects.values()))
+    return jsonify(projects.get_projects())
 
 @app.route("/projects", methods=["POST"])
 def create_project():
-    project_name = request.get_json()['name']
-    projects.add_project(project_name)
+    projects.add_project(request.get_json()['name'])
