@@ -59,7 +59,7 @@ docker-compose down -v
 Nombre de la aplicacion Heroku (App): seedy-fiuba-backend-projects
 Nombre del repositorio Heroku: https://git.heroku.com/seedy-fiuba-backend-projects.git  
   
-Heroku Postgres (BDD): # TODO: Completar (...)
+Heroku Postgres (BDD): postgresql-corrugated-25619
 (La aplicación desplegada en Heroku utiliza una base de datos Postgres propia de 
 la plataforma, agregada como add-on de la aplicacion)  
   
