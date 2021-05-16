@@ -1,5 +1,5 @@
 # Seedy Fiuba Backend-Proyectos
-[![Main](https://github.com/Seedy-Fiuba-Grupo-5/Backend-Proyects/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Seedy-Fiuba-Grupo-5/Backend-Proyectos/actions/workflows/main.yml)
+[![Main](https://github.com/Seedy-Fiuba-Grupo-5/Backend-Proyectos/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/Seedy-Fiuba-Grupo-5/Backend-Proyectos/actions/workflows/main.yml)
 [![codecov](https://codecov.io/gh/Seedy-Fiuba-Grupo-5/Backend-Proyectos/branch/main/graph/badge.svg)](https://codecov.io/gh/Seedy-Fiuba-Grupo-5/Backend-Proyectos/branch/main)
 
 [![Develop](https://github.com/Seedy-Fiuba-Grupo-5/Backend-Proyectos/actions/workflows/develop.yml/badge.svg?branch=develop)](https://github.com/Seedy-Fiuba-Grupo-5/Backend-Proyectos/actions/workflows/develop.yml)
