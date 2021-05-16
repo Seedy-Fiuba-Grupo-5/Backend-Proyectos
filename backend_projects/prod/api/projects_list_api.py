@@ -3,11 +3,11 @@ from flask_restful import Api, Resource
 from prod import db
 from prod.db_models.project_db_model import ProjectDBModel
 
-projects_api = Blueprint("projects_api", __name__)
-api = Api(projects_api)
+projects_list_api = Blueprint("projects_list_api", __name__)
+api = Api(projects_list_api)
 
 
-class ProjectsResource(Resource):
+class ProjectsListResource(Resource):
     def get(self):
         response_object =\
             [project.serialize() for project in ProjectDBModel.query.all()]
@@ -23,4 +23,4 @@ class ProjectsResource(Resource):
         return response_object, 201
 
 
-api.add_resource(ProjectsResource, "/projects")
+api.add_resource(ProjectsListResource, "/projects")
