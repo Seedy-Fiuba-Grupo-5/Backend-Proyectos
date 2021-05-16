@@ -15,3 +15,4 @@ def test_db_empty_POST_projects_name_test_project_GET_projects_should_return_jus
     assert len(data) == 1
     project = data[0]
     assert project['name'] == 'test project'
+

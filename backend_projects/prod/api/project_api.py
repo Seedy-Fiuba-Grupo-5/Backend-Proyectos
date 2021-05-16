@@ -1,4 +1,4 @@
-from flask import Blueprint  # , request
+from flask import Blueprint, jsonify  # , request
 from flask_restful import Api, Resource
 from prod.db_models.project_db_model import ProjectDBModel
 
@@ -8,10 +8,11 @@ api = Api(project_api)
 
 class ProjectResource(Resource):
     def get(self, project_id):
-        response = ProjectDBModel.query.get(project_id)
-        if response:
-            return jsonify(response), 201
-        return 'The project requested could not be found', 404
+        project_model = ProjectDBModel.query.get(project_id)
+        if not project_model:
+            return 'The project requested could not be found', 404
+        response_object = project_model.serialize()
+        return response_object, 200
 
 
 api.add_resource(ProjectResource, "/projects/<project_id>")
