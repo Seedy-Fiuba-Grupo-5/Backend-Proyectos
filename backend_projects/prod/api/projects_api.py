@@ -15,9 +15,12 @@ class ProjectsResource(Resource):
 
     def post(self):
         name = request.get_json()['name']
-        db.session.add(ProjectDBModel(name=name))
+        project_model = ProjectDBModel(name=name)
+        db.session.add(project_model)
         db.session.commit()
-        return request.get_json(), 201
+        db.session.refresh(project_model)
+        response_object = project_model.serialize()
+        return response_object, 201
 
 
 api.add_resource(ProjectsResource, "/projects")
