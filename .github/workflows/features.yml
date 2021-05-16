@@ -1,0 +1,39 @@
+name: Features
+
+on:
+  push:
+    branches-ignore: 
+      - main
+      - develop
+
+jobs:
+  test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run web and database services
+      run: |
+        docker-compose build
+        docker-compose up -d
+    - name: Wait database service initialization
+      run: |
+        docker-compose exec -T service_projects_web bash -c 'while ! nc -z service_projects_db 5432; do sleep 1; done;'
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        docker-compose exec -T service_projects_web flake8 backend_projects --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        docker-compose exec -T service_projects_web flake8 backend_projects --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    - name: Test with pytest
+      run: |
+        docker-compose exec -T service_projects_web pytest "backend_projects/dev/tests" --cov="backend_projects/prod" --cov-report term --cov-report xml
+    - name: Codecov
+      env:
+        CODECOV_TOKEN: '096a5049-264c-409d-af4e-b2b71a23fec4'
+      run: |
+        bash <(curl -s https://codecov.io/bash)
+    - name: Stopping web and database services
+      run: |
+        docker-compose stop
