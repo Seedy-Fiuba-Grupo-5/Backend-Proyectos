@@ -13,7 +13,7 @@ services:
       # Nombre del Dockerfile
       dockerfile: Dockerfile.dev
     
-    entrypoint: ['/usr/src/app/backend_users/prod/entrypoint.sh']
+    entrypoint: ['/usr/src/app/backend_projects/prod/entrypoint.sh']
     
     # TODO: Explicar esto
     volumes:
