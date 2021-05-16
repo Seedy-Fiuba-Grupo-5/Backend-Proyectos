@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 # Instanciar la base de datos
 db = SQLAlchemy()
 
+
 def create_app(script_info=None):
     # App 'Factory'
 
@@ -35,3 +36,5 @@ def create_app(script_info=None):
 def import_blueprints(app):
     from .api.projects_api import projects_api
     app.register_blueprint(projects_api)
+    from .api.project_api import project_api
+    app.register_blueprint(project_api)

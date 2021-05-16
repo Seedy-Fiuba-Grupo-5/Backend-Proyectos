@@ -1,5 +1,6 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource
+from prod import db
 from prod.db_models.project_db_model import ProjectDBModel
 
 projects_api = Blueprint("projects_api", __name__)
@@ -17,5 +18,6 @@ class ProjectsResource(Resource):
         db.session.add(ProjectDBModel(name=name))
         db.session.commit()
         return request.get_json(), 201
+
 
 api.add_resource(ProjectsResource, "/projects")
