@@ -7,16 +7,40 @@ class ProjectDBModel(db.Model):
     id = db.Column(db.Integer,
                    primary_key=True)
     name = db.Column(db.String(128),
-                     unique=True,
                      nullable=False)
+    description = db.Column(db.String(128),
+                            nullable=False)
+    hashtags = db.Column(db.String(1000),
+                         nullable=False)
+    type = db.Column(db.String(128),
+                     nullable=False)
+    goal = db.Column(db.Integer,
+                     nullable=False)
+    endDate = db.Column(db.String(128),
+                        nullable=False)
+    location = db.Column(db.String(128),
+                         nullable=False)
 
     def __init__(self,
-                 name):
+                 name, description, hashtags, type, goal,
+                 endDate, location):
         self.name = name
+        self.description = description
+        self.hashtags = hashtags
+        self.type = type
+        self.goal = goal
+        self.endDate = endDate
+        self.location = location
 
     # @property
     def serialize(self):
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'description': self.description,
+            'hashtags': self.hashtags,
+            'type': self.type,
+            'goal': self.goal,
+            'endDate': self.endDate,
+            'location': self.location
         }

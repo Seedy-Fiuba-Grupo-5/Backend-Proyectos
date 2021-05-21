@@ -13,9 +13,24 @@ class ProjectsListResource(Resource):
             [project.serialize() for project in ProjectDBModel.query.all()]
         return response_object, 200
 
+    @staticmethod
+    def check_values(json, list):
+        for value in list:
+            if value not in json:
+                return False
+        return True
+
     def post(self):
-        name = request.get_json()['name']
-        project_model = ProjectDBModel(name=name)
+        json = request.get_json()
+        if not self.check_values(json, ['name', 'description', 'hashtags', 'type', 'goal', 'endDate', 'location']):
+            return 'insufficient information for Project creation', 500
+        project_model = ProjectDBModel(name=json['name'],
+                                       description=json['description'],
+                                       hashtags=json['hashtags'],
+                                       type=json['type'],
+                                       goal=json['goal'],
+                                       endDate=json['endDate'],
+                                       location=json['location'])
         db.session.add(project_model)
         db.session.commit()
         db.session.refresh(project_model)
