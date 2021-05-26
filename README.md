@@ -107,3 +107,8 @@ Apagado del servicio :
 ```
 heroku ps:scale web=0 --app seedy-fiuba-backend-projects
 ```
+
+## Postgres psql
+```
+heroku pg:psql --app seedy-fiuba-backend-projects
+```
