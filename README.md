@@ -43,6 +43,11 @@ lineamientos de pep8.
 ```
 Nota: Este script requiere que los servicios se encuetren levantados.  
 
+### Postgres psql
+```
+docker exec -it -u postgres container_projects_db psql
+```
+
 ### Detener servicios  
 ```
 docker-compose stop
