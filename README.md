@@ -43,6 +43,11 @@ lineamientos de pep8.
 ```
 Nota: Este script requiere que los servicios se encuetren levantados.  
 
+### Postgres psql
+```
+docker exec -it -u postgres container_projects_db psql
+```
+
 ### Detener servicios  
 ```
 docker-compose stop
@@ -101,4 +106,9 @@ heroku ps:scale web=1 --app seedy-fiuba-backend-projects
 Apagado del servicio :
 ```
 heroku ps:scale web=0 --app seedy-fiuba-backend-projects
+```
+
+## Postgres psql
+```
+heroku pg:psql --app seedy-fiuba-backend-projects
 ```
