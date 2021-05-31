@@ -1,11 +1,9 @@
 import json
 from prod.db_models.project_db_model import ProjectDBModel
+from dev.aux_test import recreate_db
 
 def test_db_with_only_project_id_1_name_Project_X_GET_id_1_should_return_just_that(test_app, test_database):
-    session = test_database.session
-    session.remove()
-    test_database.drop_all()
-    test_database.create_all()
+    session = recreate_db(test_database)
     session.add(ProjectDBModel(name='Project X'))
     session.commit()
     client = test_app.test_client()
