@@ -8,6 +8,9 @@ api = Api(projects_list_api)
 
 
 class ProjectsListResource(Resource):
+    CHECK_VALUES = ['name', 'description', 'hashtags',
+                    'type', 'goal', 'endDate', 'location']
+
     def get(self):
         response_object =\
             [project.serialize() for project in ProjectDBModel.query.all()]
@@ -22,7 +25,7 @@ class ProjectsListResource(Resource):
 
     def post(self):
         json = request.get_json()
-        if not self.check_values(json, ['name', 'description', 'hashtags', 'type', 'goal', 'endDate', 'location']):
+        if not self.check_values(json, self.CHECK_VALUES):
             return 'insufficient information for Project creation', 500
         project_model = ProjectDBModel(name=json['name'],
                                        description=json['description'],
