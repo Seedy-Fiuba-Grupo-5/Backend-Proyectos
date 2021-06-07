@@ -31,7 +31,7 @@ def test_patch_project_id_cambiar_todos_los_contenidos_del_proyecto(
         'location': 'a location'
     Cuando patch 'projects/1'
     Con cuerpo:
-    'id': <id>,
+        'id': <id>,
         'name': 'another name',
         'description': 'another description',
         'hashtags': '#otherHashtags,
@@ -39,7 +39,7 @@ def test_patch_project_id_cambiar_todos_los_contenidos_del_proyecto(
         'goal': 222,
         'endDate': '2023/07/08',
         'location': 'another location'
-    Entonces los datos del proyetos se actualizan
+    Entonces los datos del proyeto se actualizan
     """
     session = recreate_db(test_database)
     old_project = {'name': 'a name', 'description': 'a description', 'hashtags': '#someHashtags',
@@ -59,3 +59,44 @@ def test_patch_project_id_cambiar_todos_los_contenidos_del_proyecto(
     patch_data = json.loads(patch_resp.data.decode())
     for field in update_project.keys():
         assert patch_data[field] == update_project[field]
+
+
+def test_patch_project_id_con_body_vacio_no_cambia_nada_del_proyecto(
+        test_app,
+        test_database):
+    """
+    Dada una base de datos.
+    Y un proyecto registrado:
+        'id': <id>,
+        'name': 'a name',
+        'description': 'a description',
+        'hashtags': '#someHashtags,
+        'type': 'a type',
+        'goal': 111,
+        'endDate': '2022/06/07',
+        'location': 'a location'
+    Cuando patch 'projects/1'
+    Con cuerpo:
+        'id': <id>
+        'name': 'another name'
+    Entonces solo se actualiza el nombre del proyecto
+    """
+    session = recreate_db(test_database)
+    old_project = {'name': 'a name', 'description': 'a description', 'hashtags': '#someHashtags',
+                   'type': 'a type', 'goal': 111, 'endDate': '2022/06/07', 'location': 'a location'}
+    client = test_app.test_client()
+    post_resp = client.post("/projects", json=old_project)
+    post_data = json.loads(post_resp.data.decode())
+    id_project = post_data['id']
+    update_project = {'id': id_project, 'name': 'another name'}
+    patch_resp = client.patch(
+        "/projects/{}".format(id_project),
+        json=update_project
+    )
+    assert patch_resp.status_code == 200
+    patch_data = json.loads(patch_resp.data.decode())
+    assert patch_data['name'] == update_project['name']
+    for field in old_project.keys():
+        if field == 'name':
+            continue
+        assert patch_data[field] == old_project[field]
