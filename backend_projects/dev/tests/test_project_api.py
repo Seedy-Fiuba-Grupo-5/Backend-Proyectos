@@ -13,3 +13,49 @@ def test_db_with_only_project_id_1_name_Project_X_GET_id_1_should_return_just_th
     assert response.status_code == 200
     project = json.loads(response.data.decode())
     assert project['name'] == 'Project X'
+
+
+def test_patch_project_id_cambiar_todos_los_contenidos_del_proyecto(
+        test_app,
+        test_database):
+    """
+    Dada una base de datos.
+    Y un proyecto registrado:
+        'id': <id>,
+        'name': 'a name',
+        'description': 'a description',
+        'hashtags': '#someHashtags,
+        'type': 'a type',
+        'goal': 111,
+        'endDate': '2022/06/07',
+        'location': 'a location'
+    Cuando patch 'projects/1'
+    Con cuerpo:
+    'id': <id>,
+        'name': 'another name',
+        'description': 'another description',
+        'hashtags': '#otherHashtags,
+        'type': 'another type',
+        'goal': 222,
+        'endDate': '2023/07/08',
+        'location': 'another location'
+    Entonces los datos del proyetos se actualizan
+    """
+    session = recreate_db(test_database)
+    old_project = {'name': 'a name', 'description': 'a description', 'hashtags': '#someHashtags',
+                   'type': 'a type', 'goal': 111, 'endDate': '2022/06/07', 'location': 'a location'}
+    client = test_app.test_client()
+    post_resp = client.post("/projects", json=old_project)
+    post_data = json.loads(post_resp.data.decode())
+    id_project = post_data['id']
+    update_project = {'id': id_project, 'name': 'another name', 'description': 'another description',
+                      'hashtags': '#otherHashtags', 'type': 'another type', 'goal': 222,
+                      'endDate': '2023/07/08', 'location': 'another location'}
+    patch_resp = client.patch(
+        "/projects/{}".format(id_project),
+        json=update_project
+    )
+    assert patch_resp.status_code == 200
+    patch_data = json.loads(patch_resp.data.decode())
+    for field in update_project.keys():
+        assert patch_data[field] == update_project[field]
