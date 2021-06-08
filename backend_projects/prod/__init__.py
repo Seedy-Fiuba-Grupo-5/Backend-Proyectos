@@ -34,7 +34,11 @@ def create_app(script_info=None):
 
 
 def import_blueprints(app):
+    # TODO: Pasar a la version con swagger
     from .api.projects_list_api import projects_list_api
     app.register_blueprint(projects_list_api)
-    from .api.project_api import project_api
-    app.register_blueprint(project_api)
+
+    # API
+    from .api import api_base_bp, api_v1_bp
+    app.register_blueprint(api_base_bp)
+    app.register_blueprint(api_v1_bp)
