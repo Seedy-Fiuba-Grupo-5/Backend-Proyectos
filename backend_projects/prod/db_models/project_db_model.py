@@ -46,14 +46,8 @@ class ProjectDBModel(db.Model):
     def update(self,
                name, description, hashtags, type, goal,
                endDate, location):
-        # TODO: Evitar codigo repetido con __init__
-        self.name = name
-        self.description = description
-        self.hashtags = hashtags
-        self.type = type
-        self.goal = goal
-        self.endDate = endDate
-        self.location = location
+        self.__init__(name, description, hashtags, type, goal,
+                      endDate, location)
         db.session.commit()
 
     def serialize(self):
