@@ -32,16 +32,22 @@ class ProjectDBModel(db.Model):
         self.endDate = endDate
         self.location = location
 
+    @classmethod
+    def create(cls,
+               name, description, hashtags, type, goal,
+               endDate, location):
+        project_model = ProjectDBModel(name, description, hashtags,
+                                       type, goal, endDate, location)
+        db.session.add(project_model)
+        db.session.commit()
+        db.session.refresh(project_model)
+        return project_model
+
     def update(self,
                name, description, hashtags, type, goal,
                endDate, location):
-        self.name = name
-        self.description = description
-        self.hashtags = hashtags
-        self.type = type
-        self.goal = goal
-        self.endDate = endDate
-        self.location = location
+        self.__init__(name, description, hashtags, type, goal,
+                      endDate, location)
         db.session.commit()
 
     def serialize(self):
