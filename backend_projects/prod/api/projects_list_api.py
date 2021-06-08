@@ -56,7 +56,7 @@ class ProjectsListResource(Resource):
     def post(self):
         json = request.get_json()
         if not self.check_values(json, self.PJT_FIELDS):
-            ns.abort(400, self.MISSING_VALUES_ERROR)
+            ns.abort(400, status=self.MISSING_VALUES_ERROR)
         project_model = ProjectDBModel.create(
             name=json['name'],
             description=json['description'],
