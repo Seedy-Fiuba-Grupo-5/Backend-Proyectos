@@ -13,7 +13,7 @@ ns = Namespace(
 class ProjectResource(Resource):
     PROJECT_NOT_FOUND_ERROR = 'The project requested could not be found'
 
-    body_swg = ns.model('Project input', {
+    body_swg = ns.model('ProjectInput', {
         'name': fields.String(description='The project name'),
         'description': fields.String(description='The project description'),
         'hashtags': fields.String(description='The project hashtags'),
@@ -23,7 +23,7 @@ class ProjectResource(Resource):
         'location': fields.String(description='The project location')
     })
 
-    code_200_swg = ns.model('Project output 200', {
+    code_200_swg = ns.model('ProjectOutput200', {
         'id': fields.Integer(description='The project identifier'),
         'name': fields.String(description='The project name'),
         'description': fields.String(description='The project description'),
@@ -34,7 +34,7 @@ class ProjectResource(Resource):
         'location': fields.String(description='The project location')
     })
 
-    code_404_swg = ns.model('Project output 404', {
+    code_404_swg = ns.model('ProjectOutput404', {
         'status': fields.String(example=PROJECT_NOT_FOUND_ERROR)
     })
 
