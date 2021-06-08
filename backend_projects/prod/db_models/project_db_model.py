@@ -32,9 +32,21 @@ class ProjectDBModel(db.Model):
         self.endDate = endDate
         self.location = location
 
+    @classmethod
+    def create(cls,
+               name, description, hashtags, type, goal,
+               endDate, location):
+        project_model = ProjectDBModel(name, description, hashtags,
+                                       type, goal, endDate, location)
+        db.session.add(project_model)
+        db.session.commit()
+        db.session.refresh(project_model)
+        return project_model
+
     def update(self,
                name, description, hashtags, type, goal,
                endDate, location):
+        # TODO: Evitar codigo repetido con __init__
         self.name = name
         self.description = description
         self.hashtags = hashtags
