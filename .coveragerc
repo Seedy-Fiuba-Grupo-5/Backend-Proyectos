@@ -1,4 +1,4 @@
 [run]
 omit = 
         backend_projects/tests/*
-        backend_projects/prod/manage.py
+        backend_projects/prod/main.py
