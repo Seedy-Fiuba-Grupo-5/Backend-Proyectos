@@ -100,3 +100,4 @@ def test_patch_project_id_con_body_vacio_no_cambia_nada_del_proyecto(
         if field == 'name':
             continue
         assert patch_data[field] == old_project[field]
+

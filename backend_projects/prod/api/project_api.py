@@ -47,6 +47,9 @@ class ProjectResource(Resource):
         response_object = project_model.serialize()
         return response_object, 200
 
+    def delete(self, project_id):
+        ProjectDBModel.delete(project_id)
+
     @ns.expect(body_swg)
     @ns.marshal_with(code_200_swg, code=200)
     def patch(self, project_id):
