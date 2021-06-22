@@ -101,3 +101,29 @@ def test_patch_project_id_con_body_vacio_no_cambia_nada_del_proyecto(
             continue
         assert patch_data[field] == old_project[field]
 
+
+def test_delete_project_id_elimina_el_proyecto(
+        test_app,
+        test_database):
+    """
+    Dada una base de datos.
+    Y un proyecto registrado:
+        'id': <id>,
+    Cuando DELETE 'projects/<id>'
+    Entonces el proyecto es eliminado
+    """
+    session = recreate_db(test_database)
+    project = {'name': 'a name', 'description': 'a description', 'hashtags': '#someHashtags',
+               'type': 'a type', 'goal': 111, 'endDate': '2022/06/07', 'location': 'a location'}
+    client = test_app.test_client()
+
+    post_resp = client.post("/projects", json=project)
+    post_data = json.loads(post_resp.data.decode())
+    id_project = post_data['id']
+
+    with test_app.test_request_context():
+        delete_resp = client.delete("/projects/{}".format(id_project))
+        assert delete_resp.status_code == 204
+
+    get_resp = client.get("/projects/{}".format(id_project))
+    assert get_resp.status_code == 404

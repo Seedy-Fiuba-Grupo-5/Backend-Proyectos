@@ -48,13 +48,13 @@ class ProjectResource(Resource):
         response_object = project_model.serialize()
         return response_object, 200
 
-    @ns.marshal_with(code_200_swg, code=200)
+    @ns.response(204, description=PROJECT_DELETED)
     @ns.response(404, description=PROJECT_DELETED, model=code_404_swg)
     def delete(self, project_id):
         value = ProjectDBModel.delete(project_id)
         if value == 1:
             ns.abort(404, status=self.PROJECT_DELETED)
-        ns.abort(200, status=self.PROJECT_DELETED)
+        return '', 204
 
     @ns.expect(body_swg)
     @ns.marshal_with(code_200_swg, code=200)

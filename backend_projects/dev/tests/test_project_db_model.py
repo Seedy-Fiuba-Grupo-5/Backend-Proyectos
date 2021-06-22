@@ -17,4 +17,3 @@ def test_delete_element_from_db(test_app, test_database):
     ProjectDBModel.delete(1)
     associated_id = ProjectDBModel.query.filter_by(name="hola")
     assert associated_id.count() == 0
-
