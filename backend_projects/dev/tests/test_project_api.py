@@ -110,12 +110,13 @@ def test_delete_project_id_elimina_el_proyecto(
     Y un proyecto registrado:
         'id': <id>,
     Cuando DELETE 'projects/<id>'
-    Entonces el proyecto es eliminado
+    Entonces obtengo status code 204
+    Y el proyecto es eliminado
     """
     session = recreate_db(test_database)
+    client = test_app.test_client()
     project = {'name': 'a name', 'description': 'a description', 'hashtags': '#someHashtags',
                'type': 'a type', 'goal': 111, 'endDate': '2022/06/07', 'location': 'a location'}
-    client = test_app.test_client()
 
     post_resp = client.post("/projects", json=project)
     post_data = json.loads(post_resp.data.decode())
@@ -127,3 +128,21 @@ def test_delete_project_id_elimina_el_proyecto(
 
     get_resp = client.get("/projects/{}".format(id_project))
     assert get_resp.status_code == 404
+
+def test_delete_project_id_elimina_el_proyecto(
+        test_app,
+        test_database):
+    """
+    Dada una base de datos vacia.
+    Cuando DELETE 'projects/<id>'
+    Entonces obtengo status code 404
+    Con cuerpo:
+        "status": 'The project requested could not be found'
+    """
+    session = recreate_db(test_database)
+    client = test_app.test_client()
+
+    delete_resp = client.delete("/projects/111")
+    assert delete_resp.status_code == 404
+    delete_data = json.loads(delete_resp.data.decode())
+    assert delete_data['status'] == 'The project requested could not be found'
