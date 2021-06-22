@@ -61,3 +61,14 @@ class ProjectDBModel(db.Model):
             'endDate': self.endDate,
             'location': self.location
         }
+
+    @staticmethod
+    def delete(deleted_id):
+        projects_query = ProjectDBModel.query.filter_by(id=deleted_id)
+        if projects_query.count() == 0:
+            return 1
+        deleted_objects = ProjectDBModel.__table__.delete().where(
+            ProjectDBModel.id == deleted_id)
+        db.session.execute(deleted_objects)
+        db.session.commit()
+        return 0

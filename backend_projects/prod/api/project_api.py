@@ -12,6 +12,7 @@ ns = Namespace(
 @ns.param('project_id', description='The project identifier')
 class ProjectResource(Resource):
     PROJECT_NOT_FOUND_ERROR = 'The project requested could not be found'
+    PROJECT_DELETED = 'The project was deleted'
 
     body_swg = ns.model('ProjectInput', {
         'name': fields.String(description='The project name'),
@@ -46,6 +47,14 @@ class ProjectResource(Resource):
             ns.abort(404, status=self.PROJECT_NOT_FOUND_ERROR)
         response_object = project_model.serialize()
         return response_object, 200
+
+    @ns.response(204, PROJECT_DELETED)
+    @ns.response(404, PROJECT_NOT_FOUND_ERROR, code_404_swg)
+    def delete(self, project_id):
+        value = ProjectDBModel.delete(project_id)
+        if value == 1:
+            ns.abort(404, status=self.PROJECT_NOT_FOUND_ERROR)
+        return '', 204
 
     @ns.expect(body_swg)
     @ns.marshal_with(code_200_swg, code=200)
