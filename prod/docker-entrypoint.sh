@@ -7,7 +7,7 @@ done
 
 >&2 echo "Postgres is up - executing command"
 
-# Ejecuta las migraciones en la (db)
+# Ejecuta las migraciones en la base de datos
 flask db upgrade
 
 # Indica a Flask que levante un servidor
