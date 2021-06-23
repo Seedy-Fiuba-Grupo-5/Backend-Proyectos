@@ -1,6 +1,9 @@
 from flask import request
 from flask_restx import Namespace, Resource, fields
 from prod.db_models.project_db_model import ProjectDBModel
+from prod.schemas.project_body import project_body
+from prod.schemas.project_representation import project_representation
+from prod.schemas.project_not_found import project_not_found, PROJECT_NOT_FOUND_ERROR
 
 ns = Namespace(
     'projects/<int:project_id>',
@@ -11,34 +14,9 @@ ns = Namespace(
 @ns.route('')
 @ns.param('project_id', description='The project identifier')
 class ProjectResource(Resource):
-    PROJECT_NOT_FOUND_ERROR = 'The project requested could not be found'
-
-    body_swg = ns.model('ProjectInput', {
-        'name': fields.String(description='The project name'),
-        'description': fields.String(description='The project description'),
-        'hashtags': fields.String(description='The project hashtags'),
-        'type': fields.String(description='The project types'),
-        'goal': fields.Integer(description='The project goal'),
-        'endDate': fields.String(description='The project end date'),
-        'location': fields.String(description='The project location'),
-        'image': fields.String(description='The project image url')
-    })
-
-    code_200_swg = ns.model('ProjectOutput200', {
-        'id': fields.Integer(description='The project identifier'),
-        'name': fields.String(description='The project name'),
-        'description': fields.String(description='The project description'),
-        'hashtags': fields.String(description='The project hashtags'),
-        'type': fields.String(description='The project types'),
-        'goal': fields.Integer(description='The project goal'),
-        'endDate': fields.String(description='The project end date'),
-        'location': fields.String(description='The project location'),
-        'image': fields.String(description='The project image url')
-    })
-
-    code_404_swg = ns.model('ProjectOutput404', {
-        'status': fields.String(example=PROJECT_NOT_FOUND_ERROR)
-    })
+    body_swg = ns.model(project_body.name, project_body)
+    code_200_swg = ns.model(project_representation.name, project_representation)
+    code_404_swg = ns.model(project_not_found.name, project_not_found)
 
     @ns.response(200, 'Success', code_200_swg)
     @ns.response(404, PROJECT_NOT_FOUND_ERROR, code_404_swg)

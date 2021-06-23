@@ -1,6 +1,10 @@
 from flask import request
 from flask_restx import Namespace, Resource, fields
 from prod.db_models.project_db_model import ProjectDBModel
+from prod.schemas.project_required_body import project_required_body
+from prod.schemas.project_representation import project_representation
+from prod.schemas.missing_values import missing_values, MISSING_VALUES_ERROR
+from prod.schemas.constants import PROJECT_FIELDS
 
 ns = Namespace(
     'projects',
@@ -10,56 +14,23 @@ ns = Namespace(
 
 @ns.route('')
 class ProjectsListResource(Resource):
-    PJT_FIELDS = ['name', 'description', 'hashtags', 'type', 
-                  'goal', 'endDate', 'location', 'image']
+    body_swg = ns.model(project_required_body.name, project_required_body)
+    code_20x_swg = ns.model(project_representation.name, project_representation)
+    code_400_swg = ns.model(missing_values.name, missing_values)
 
-    MISSING_VALUES_ERROR = 'Missing values'
-
-    body_swg = ns.model('ProjectInput', {
-        'name': fields.String(required=True, description='The project name'),
-        'description': fields.String(
-            required=True, description='The project description'),
-        'hashtags': fields.String(
-            required=True, description='The project hashtags'),
-        'type': fields.String(required=True, description='The project types'),
-        'goal': fields.Integer(required=True, description='The project goal'),
-        'endDate': fields.String(
-            required=True, description='The project end date'),
-        'location': fields.String(
-            required=True, description='The project location'),
-        'image': fields.String(
-            required=True, description='The project image url')
-    })
-
-    code_20x_swg = ns.model('ProjectOutput20x', {
-        'id': fields.Integer(description='The project identifier'),
-        'name': fields.String(description='The project name'),
-        'description': fields.String(description='The project description'),
-        'hashtags': fields.String(description='The project hashtags'),
-        'type': fields.String(description='The project types'),
-        'goal': fields.Integer(description='The project goal'),
-        'endDate': fields.String(description='The project end date'),
-        'location': fields.String(description='The project location'),
-        'image': fields.String(description='The project image url')
-    })
-
-    code_400_swg = ns.model('ProjectOutput400', {
-        'status': fields.String(example=MISSING_VALUES_ERROR)
-    })
-
-    @ns.marshal_with(code_20x_swg, as_list=True, code=200)
+    @ns.response(200, 'Success', fields.List(fields.Nested(code_20x_swg)))
     def get(self):
         response_object =\
             [project.serialize() for project in ProjectDBModel.query.all()]
         return response_object, 200
 
     @ns.expect(body_swg)
-    @ns.marshal_with(code_20x_swg, as_list=False, code=201)
-    @ns.response(400, description=MISSING_VALUES_ERROR, model=code_400_swg)
+    @ns.response(201, 'Success', code_20x_swg)
+    @ns.response(400, MISSING_VALUES_ERROR, code_400_swg)
     def post(self):
         json = request.get_json()
-        if not self.check_values(json, self.PJT_FIELDS):
-            ns.abort(400, status=self.MISSING_VALUES_ERROR)
+        if not self.check_values(json, PROJECT_FIELDS):
+            ns.abort(400, status=MISSING_VALUES_ERROR)
         project_model = ProjectDBModel.create(
             name=json['name'],
             description=json['description'],
