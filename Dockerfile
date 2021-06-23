@@ -4,7 +4,7 @@
 FROM python:3.8
 
 # Directorio de trabajo
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Actualizar repositorios de apt
 RUN apt-get update
@@ -15,11 +15,12 @@ RUN apt-get -y install postgresql-client
 
 # Instalar dependencias
 RUN pip install --upgrade pip
-COPY ./requirements-prod.txt /usr/src/app/requirements-prod.txt
+COPY ./requirements-prod.txt /app/requirements-prod.txt
 RUN pip install -Ur requirements-prod.txt
 
-# Copiar archivos de produccion
-COPY /backend_projects/prod /usr/src/app/backend_projects/prod
+# Copiar archivos de migraciones y produccion
+COPY /migrations /app/migrations
+COPY /prod /app/prod
 
 # Indica al inteprete de Python que no genere archivos .pyc
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -32,11 +33,11 @@ ENV PYTHONUNBUFFERED 1
 ENV FLASK_ENV=production
 
 # Indica a Flask en que modulo se encuetra la aplicacion
-ENV FLASK_APP=backend_projects/prod/main
+ENV FLASK_APP=prod/app.py
 
 # Indica a Flask en que modulo se encuetra la configuracion de 
 # la aplicacion
 ENV APP_SETTINGS=prod.config.ProductionConfig
 
 # Ejecutar el script entrypoint.sh
-ENTRYPOINT ["sh", "/usr/src/app/backend_projects/prod/entrypoint.sh"] 
+ENTRYPOINT ["sh", "/app/prod/docker-entrypoint.sh"] 

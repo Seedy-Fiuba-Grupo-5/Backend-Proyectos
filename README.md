@@ -112,3 +112,28 @@ heroku ps:scale web=0 --app seedy-fiuba-backend-projects
 ```
 heroku pg:psql --app seedy-fiuba-backend-projects
 ```
+
+## Migraciones (ambos entornos)
+### Crear carpeta migrations/
+Crear carpeta migrations:
+```
+docker-compose exec service_projects_web flask db init
+```
+
+### Agregar nueva migración
+```
+docker-compose exec service_projects_web flask db migrate
+```
+
+### Actualizar la base de datos con las nuevas migraciones
+```
+docker-compose exec service_projects_web flask db upgrade
+```
+Nota 1: Manualmente, se debe agregar las nuevas migraciones
+a traves del comando `flask db migrate` descrito en la sección
+anterior. Esto es gran importancia antes de subir la nueva 
+instancia de la aplicacion a Heroku.  
+Nota 2: Este comando ya es invocado desde el archivo 
+docker-entrypoint.sh antes de invocar a la aplicación web.  
+
+
