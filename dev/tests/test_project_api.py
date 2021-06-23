@@ -55,7 +55,7 @@ def test_patch_project_id_cambiar_todos_los_contenidos_del_proyecto(
     id_project = post_data['id']
     update_project = {'id': id_project, 'name': 'another name', 'description': 'another description',
                       'hashtags': '#otherHashtags', 'type': 'another type', 'goal': 222,
-                      'endDate': '2023/07/08', 'location': 'another location', 
+                      'endDate': '2023/07/08', 'location': 'another location',
                       'image': 'www.another-image-url.com'}
     patch_resp = client.patch(
         "/projects/{}".format(id_project),

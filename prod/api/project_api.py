@@ -1,9 +1,10 @@
 from flask import request
-from flask_restx import Namespace, Resource, fields
+from flask_restx import Namespace, Resource
 from prod.db_models.project_db_model import ProjectDBModel
 from prod.schemas.project_body import project_body
 from prod.schemas.project_representation import project_representation
-from prod.schemas.project_not_found import project_not_found, PROJECT_NOT_FOUND_ERROR
+from prod.schemas.project_not_found import project_not_found,\
+                                           PROJECT_NOT_FOUND_ERROR
 
 ns = Namespace(
     'projects/<int:project_id>',
@@ -15,7 +16,8 @@ ns = Namespace(
 @ns.param('project_id', description='The project identifier')
 class ProjectResource(Resource):
     body_swg = ns.model(project_body.name, project_body)
-    code_200_swg = ns.model(project_representation.name, project_representation)
+    code_200_swg = ns.model(project_representation.name,
+                            project_representation)
     code_404_swg = ns.model(project_not_found.name, project_not_found)
 
     @ns.response(200, 'Success', code_200_swg)

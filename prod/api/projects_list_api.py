@@ -15,7 +15,8 @@ ns = Namespace(
 @ns.route('')
 class ProjectsListResource(Resource):
     body_swg = ns.model(project_required_body.name, project_required_body)
-    code_20x_swg = ns.model(project_representation.name, project_representation)
+    code_20x_swg = ns.model(project_representation.name,
+                            project_representation)
     code_400_swg = ns.model(missing_values.name, missing_values)
 
     @ns.response(200, 'Success', fields.List(fields.Nested(code_20x_swg)))

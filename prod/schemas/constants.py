@@ -1,5 +1,5 @@
 DESCRIPTIONS = {
-    'id' : 'The project id',
+    'id': 'The project id',
     'name': 'The project name',
     'description': 'The project description',
     'hashtags': 'The project hashtags',

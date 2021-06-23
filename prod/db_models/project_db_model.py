@@ -40,8 +40,8 @@ class ProjectDBModel(db.Model):
     def create(cls,
                name, description, hashtags, type, goal,
                endDate, location, image):
-        project_model = ProjectDBModel(name, description, hashtags, type, 
-                                        goal, endDate, location, image)
+        project_model = ProjectDBModel(name, description, hashtags, type,
+                                       goal, endDate, location, image)
         db.session.add(project_model)
         db.session.commit()
         db.session.refresh(project_model)
