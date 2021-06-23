@@ -7,7 +7,7 @@ def test_delete_element_from_db(test_app, test_database):
     session.add(ProjectDBModel.create("hola",
                                       'a description',
                                       '#someHashtags',
-                                      'a type',
+                                      'Comics',
                                       111,
                                       '2022/06/07',
                                       'a location',

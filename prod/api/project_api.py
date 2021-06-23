@@ -35,16 +35,19 @@ class ProjectResource(Resource):
     def patch(self, project_id):
         json = request.get_json()
         project_model = ProjectDBModel.query.get(project_id)
-        project_model.update(
-            name=json.get('name', project_model.name),
-            description=json.get('description', project_model.description),
-            hashtags=json.get('hashtags', project_model.hashtags),
-            type=json.get('type', project_model.type),
-            goal=json.get('goal', project_model.goal),
-            endDate=json.get('endDate', project_model.endDate),
-            location=json.get('location', project_model.location),
-            image=json.get('image', project_model.image)
-        )
+        try:
+            project_model.update(
+                name=json.get('name', project_model.name),
+                description=json.get('description', project_model.description),
+                hashtags=json.get('hashtags', project_model.hashtags),
+                type=json.get('type', project_model.type.value),
+                goal=json.get('goal', project_model.goal),
+                endDate=json.get('endDate', project_model.endDate),
+                location=json.get('location', project_model.location),
+                image=json.get('image', project_model.image)
+            )
+        except TypeError:
+            ns.abort(400, status="The type selected in not a valid one")
         # Refresh project
         project_model = ProjectDBModel.query.get(project_id)
         response_object = project_model.serialize()

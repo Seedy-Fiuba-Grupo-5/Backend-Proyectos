@@ -32,16 +32,19 @@ class ProjectsListResource(Resource):
         json = request.get_json()
         if not self.check_values(json, PROJECT_FIELDS):
             ns.abort(400, status=MISSING_VALUES_ERROR)
-        project_model = ProjectDBModel.create(
-            name=json['name'],
-            description=json['description'],
-            hashtags=json['hashtags'],
-            type=json['type'],
-            goal=json['goal'],
-            endDate=json['endDate'],
-            location=json['location'],
-            image=json['image']
-        )
+        try:
+            project_model = ProjectDBModel.create(
+                name=json['name'],
+                description=json['description'],
+                hashtags=json['hashtags'],
+                type=json['type'],
+                goal=json['goal'],
+                endDate=json['endDate'],
+                location=json['location'],
+                image=json['image']
+            )
+        except TypeError:
+            ns.abort(400, status="The type selected in not a valid one")
         response_object = project_model.serialize()
         return response_object, 201
 
