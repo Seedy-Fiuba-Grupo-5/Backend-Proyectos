@@ -15,4 +15,6 @@ PROJECT_FIELDS = ['name', 'description', 'hashtags', 'type',
 
 PROJECT_NOT_FOUND_ERROR = 'The project requested could not be found'
 
+PROJECT_DELETED = 'The project was deleted'
+
 MISSING_VALUES_ERROR = 'Missing values'

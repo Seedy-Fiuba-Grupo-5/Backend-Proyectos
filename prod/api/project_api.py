@@ -4,7 +4,8 @@ from prod.db_models.project_db_model import ProjectDBModel
 from prod.schemas.project_body import project_body
 from prod.schemas.project_representation import project_representation
 from prod.schemas.project_not_found import project_not_found,\
-                                           PROJECT_NOT_FOUND_ERROR
+    PROJECT_NOT_FOUND_ERROR
+from prod.schemas.constants import PROJECT_DELETED
 
 ns = Namespace(
     'projects/<int:project_id>',
@@ -25,7 +26,7 @@ class ProjectResource(Resource):
     def get(self, project_id):
         project_model = ProjectDBModel.query.get(project_id)
         if not project_model:
-            ns.abort(404, status=self.PROJECT_NOT_FOUND_ERROR)
+            ns.abort(404, status=PROJECT_NOT_FOUND_ERROR)
         response_object = project_model.serialize()
         return response_object, 200
 
@@ -48,3 +49,11 @@ class ProjectResource(Resource):
         project_model = ProjectDBModel.query.get(project_id)
         response_object = project_model.serialize()
         return response_object, 200
+
+    @ns.response(204, PROJECT_DELETED)
+    @ns.response(404, PROJECT_NOT_FOUND_ERROR, code_404_swg)
+    def delete(self, project_id):
+        value = ProjectDBModel.delete(project_id)
+        if value == 1:
+            ns.abort(404, status=PROJECT_NOT_FOUND_ERROR)
+        return '', 204
