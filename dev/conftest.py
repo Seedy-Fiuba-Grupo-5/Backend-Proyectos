@@ -1,6 +1,6 @@
 import pytest
 
-from prod import create_app, db
+from prod.create import create_app, db
 
 
 @pytest.fixture(scope="module")

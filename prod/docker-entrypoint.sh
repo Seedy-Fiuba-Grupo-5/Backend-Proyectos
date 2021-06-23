@@ -7,6 +7,9 @@ done
   
 >&2 echo "Postgres is up - executing command"
 
+# Ejecuta las migraciones en la (db)
+flask db upgrade
+
 # Indica a Flask que levante un servidor
 # 0.0.0.0 : El servidor sera publicamente visible
 # ${PORT:-5000} : El puerto donde se bindea el server 
