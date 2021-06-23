@@ -18,7 +18,8 @@ RUN pip install --upgrade pip
 COPY ./requirements-prod.txt /app/requirements-prod.txt
 RUN pip install -Ur requirements-prod.txt
 
-# Copiar archivos de produccion
+# Copiar archivos de migraciones y produccion
+COPY /migrations /app/migrations
 COPY /prod /app/prod
 
 # Indica al inteprete de Python que no genere archivos .pyc

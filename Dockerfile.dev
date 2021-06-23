@@ -43,6 +43,7 @@ ENV FLASK_APP=prod/app.py
 # la aplicacion
 ENV APP_SETTINGS=dev.config_app.DevelopmentConfig
 
-# Copiar archivos de produccion y desarrollo
+# Copiar archivos de migraciones, produccion y desarrollo
+COPY /migrations /app/migrations
 COPY /prod/ /app/prod/
 COPY /dev/ /app/dev/
