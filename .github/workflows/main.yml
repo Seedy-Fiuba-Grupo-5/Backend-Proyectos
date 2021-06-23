@@ -36,6 +36,3 @@ jobs:
         CODECOV_TOKEN: 'd1c4db1c-b126-4402-83ee-22c163144e68'
       run: |
         bash <(curl -s https://codecov.io/bash)
-    - name: Stopping web and database services
-      run: |
-        docker-compose stop
