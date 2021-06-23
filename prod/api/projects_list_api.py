@@ -10,8 +10,8 @@ ns = Namespace(
 
 @ns.route('')
 class ProjectsListResource(Resource):
-    PJT_FIELDS = ['name', 'description', 'hashtags',
-                  'type', 'goal', 'endDate', 'location']
+    PJT_FIELDS = ['name', 'description', 'hashtags', 'type', 
+                  'goal', 'endDate', 'location', 'image']
 
     MISSING_VALUES_ERROR = 'Missing values'
 
@@ -26,7 +26,9 @@ class ProjectsListResource(Resource):
         'endDate': fields.String(
             required=True, description='The project end date'),
         'location': fields.String(
-            required=True, description='The project location')
+            required=True, description='The project location'),
+        'image': fields.String(
+            required=True, description='The project image url')
     })
 
     code_20x_swg = ns.model('ProjectOutput20x', {
@@ -37,7 +39,8 @@ class ProjectsListResource(Resource):
         'type': fields.String(description='The project types'),
         'goal': fields.Integer(description='The project goal'),
         'endDate': fields.String(description='The project end date'),
-        'location': fields.String(description='The project location')
+        'location': fields.String(description='The project location'),
+        'image': fields.String(description='The project image url')
     })
 
     code_400_swg = ns.model('ProjectOutput400', {
@@ -64,7 +67,8 @@ class ProjectsListResource(Resource):
             type=json['type'],
             goal=json['goal'],
             endDate=json['endDate'],
-            location=json['location']
+            location=json['location'],
+            image=json['image']
         )
         response_object = project_model.serialize()
         return response_object, 201

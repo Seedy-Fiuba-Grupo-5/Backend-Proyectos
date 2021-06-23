@@ -20,7 +20,8 @@ class ProjectResource(Resource):
         'type': fields.String(description='The project types'),
         'goal': fields.Integer(description='The project goal'),
         'endDate': fields.String(description='The project end date'),
-        'location': fields.String(description='The project location')
+        'location': fields.String(description='The project location'),
+        'image': fields.String(description='The project image url')
     })
 
     code_200_swg = ns.model('ProjectOutput200', {
@@ -31,15 +32,16 @@ class ProjectResource(Resource):
         'type': fields.String(description='The project types'),
         'goal': fields.Integer(description='The project goal'),
         'endDate': fields.String(description='The project end date'),
-        'location': fields.String(description='The project location')
+        'location': fields.String(description='The project location'),
+        'image': fields.String(description='The project image url')
     })
 
     code_404_swg = ns.model('ProjectOutput404', {
         'status': fields.String(example=PROJECT_NOT_FOUND_ERROR)
     })
 
-    @ns.marshal_with(code_200_swg, code=200)
-    @ns.response(404, description=PROJECT_NOT_FOUND_ERROR, model=code_404_swg)
+    @ns.response(200, 'Success', code_200_swg)
+    @ns.response(404, PROJECT_NOT_FOUND_ERROR, code_404_swg)
     def get(self, project_id):
         project_model = ProjectDBModel.query.get(project_id)
         if not project_model:
@@ -48,7 +50,7 @@ class ProjectResource(Resource):
         return response_object, 200
 
     @ns.expect(body_swg)
-    @ns.marshal_with(code_200_swg, code=200)
+    @ns.response(200, 'Success', code_200_swg)
     def patch(self, project_id):
         json = request.get_json()
         project_model = ProjectDBModel.query.get(project_id)
@@ -59,7 +61,8 @@ class ProjectResource(Resource):
             type=json.get('type', project_model.type),
             goal=json.get('goal', project_model.goal),
             endDate=json.get('endDate', project_model.endDate),
-            location=json.get('location', project_model.location)
+            location=json.get('location', project_model.location),
+            image=json.get('image', project_model.image)
         )
         # Refresh project
         project_model = ProjectDBModel.query.get(project_id)
