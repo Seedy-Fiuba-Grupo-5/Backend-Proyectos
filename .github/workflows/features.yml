@@ -23,17 +23,14 @@ jobs:
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
-        docker-compose exec -T service_projects_web flake8 backend_projects --count --select=E9,F63,F7,F82 --show-source --statistics
+        docker-compose exec -T service_projects_web flake8 prod dev --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-        docker-compose exec -T service_projects_web flake8 backend_projects --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+        docker-compose exec -T service_projects_web flake8 prod dev --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
-        docker-compose exec -T service_projects_web pytest "backend_projects/dev/tests" --cov="backend_projects/prod" --cov-report term --cov-report xml
+        docker-compose exec -T service_projects_web pytest "dev/tests" --cov="prod" --cov-report term --cov-report xml
     - name: Codecov
       env:
         CODECOV_TOKEN: 'd1c4db1c-b126-4402-83ee-22c163144e68'
       run: |
         bash <(curl -s https://codecov.io/bash)
-    - name: Stopping web and database services
-      run: |
-        docker-compose stop

@@ -10,7 +10,8 @@ def test_delete_element_from_db(test_app, test_database):
                                       'a type',
                                       111,
                                       '2022/06/07',
-                                      'a location'))
+                                      'a location',
+                                      'www.an-image.com'))
     session.commit()
     associated_id = ProjectDBModel.query.filter_by(name="hola")
     assert associated_id.count() == 1

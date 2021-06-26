@@ -20,10 +20,13 @@ class ProjectDBModel(db.Model):
                         nullable=False)
     location = db.Column(db.String(128),
                          nullable=False)
+    image = db.Column(db.Text,
+                      nullable=False,
+                      default='')
 
     def __init__(self,
                  name, description, hashtags, type, goal,
-                 endDate, location):
+                 endDate, location, image):
         self.name = name
         self.description = description
         self.hashtags = hashtags
@@ -31,13 +34,14 @@ class ProjectDBModel(db.Model):
         self.goal = goal
         self.endDate = endDate
         self.location = location
+        self.image = image
 
     @classmethod
     def create(cls,
                name, description, hashtags, type, goal,
-               endDate, location):
-        project_model = ProjectDBModel(name, description, hashtags,
-                                       type, goal, endDate, location)
+               endDate, location, image):
+        project_model = ProjectDBModel(name, description, hashtags, type,
+                                       goal, endDate, location, image)
         db.session.add(project_model)
         db.session.commit()
         db.session.refresh(project_model)
@@ -45,9 +49,9 @@ class ProjectDBModel(db.Model):
 
     def update(self,
                name, description, hashtags, type, goal,
-               endDate, location):
+               endDate, location, image):
         self.__init__(name, description, hashtags, type, goal,
-                      endDate, location)
+                      endDate, location, image)
         db.session.commit()
 
     def serialize(self):
@@ -59,7 +63,8 @@ class ProjectDBModel(db.Model):
             'type': self.type,
             'goal': self.goal,
             'endDate': self.endDate,
-            'location': self.location
+            'location': self.location,
+            'image': self.image
         }
 
     @staticmethod
