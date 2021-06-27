@@ -24,6 +24,7 @@ class ProjectsListResource(Resource):
     def get(self):
         type = request.args.get("type")
         if type:
+            enumType = None
             for item in ProjectTypeEnum:
                 if item.value == type:
                     enumType = item
