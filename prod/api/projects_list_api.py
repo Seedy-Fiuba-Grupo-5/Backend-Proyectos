@@ -1,6 +1,7 @@
 from flask import request
 from flask_restx import Namespace, Resource, fields
 from prod.db_models.project_db_model import ProjectDBModel
+from prod.schemas.project_options import ProjectTypeEnum
 from prod.schemas.project_required_body import project_required_body
 from prod.schemas.project_representation import project_representation
 from prod.schemas.missing_values import missing_values, MISSING_VALUES_ERROR
@@ -21,8 +22,16 @@ class ProjectsListResource(Resource):
 
     @ns.response(200, 'Success', fields.List(fields.Nested(code_20x_swg)))
     def get(self):
-        response_object =\
-            [project.serialize() for project in ProjectDBModel.query.all()]
+        type = request.args.get("type")
+        if type:
+            for item in ProjectTypeEnum:
+                if item.value == type:
+                    enumType = item
+            response_object =\
+                [project.serialize() for project in ProjectDBModel.query.filter_by(type=enumType).all()]
+        else:
+            response_object = \
+                [project.serialize() for project in ProjectDBModel.query.all()]
         return response_object, 200
 
     @ns.expect(body_swg)
