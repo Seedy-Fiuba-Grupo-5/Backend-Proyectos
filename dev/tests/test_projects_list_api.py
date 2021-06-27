@@ -34,6 +34,7 @@ def test_db_empty_POST_projects_name_test_project_GET_projects_should_return_jus
     project = data[0]
     assert project['name'] == 'test project'
 
+
 def test_get_project_con_filtro_devuelve_solo_los_con_ese_tipo(
         test_app,
         test_database):
@@ -57,6 +58,7 @@ def test_get_project_con_filtro_devuelve_solo_los_con_ese_tipo(
     projects = json.loads(response.data.decode())
     assert len(projects) == 1 and projects[0]["type"] == "Comics"
 
+
 def test_post_project_con_tipo_no_valido(
         test_app,
         test_database):
@@ -70,8 +72,8 @@ def test_post_project_con_tipo_no_valido(
     session = recreate_db(test_database)
     client = test_app.test_client()
     project = {'name': 'a name', 'description': 'a description', 'hashtags': '#someHashtags',
-                   'type': 'tipo invalido', 'goal': 111, 'endDate': '2022/06/07', 'location': 'a location',
-                   'image': 'www.an-image-url.com'}
+               'type': 'tipo invalido', 'goal': 111, 'endDate': '2022/06/07', 'location': 'a location',
+               'image': 'www.an-image-url.com'}
     response = client.post("/projects", json=project)
     assert response.status_code == 400
     data = json.loads(response.data.decode())

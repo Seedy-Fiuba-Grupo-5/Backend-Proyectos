@@ -28,7 +28,8 @@ class ProjectsListResource(Resource):
                 if item.value == type:
                     enumType = item
             response_object =\
-                [project.serialize() for project in ProjectDBModel.query.filter_by(type=enumType).all()]
+                [project.serialize() for project
+                    in ProjectDBModel.query.filter_by(type=enumType).all()]
         else:
             response_object = \
                 [project.serialize() for project in ProjectDBModel.query.all()]

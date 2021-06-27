@@ -1,5 +1,6 @@
 import enum
 
+
 class ProjectTypeEnum(enum.Enum):
     art = "Art"
     comics = "Comics"
@@ -17,5 +18,3 @@ class ProjectTypeEnum(enum.Enum):
     technology = "Technology"
     theater = "Theater"
     other = "Other"
-
-
