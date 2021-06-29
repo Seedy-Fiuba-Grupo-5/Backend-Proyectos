@@ -1,3 +1,4 @@
+import json
 from flask import request
 from flask_restx import Namespace, Resource, fields
 from prod.db_models.project_db_model import ProjectDBModel
@@ -22,18 +23,20 @@ class ProjectsListResource(Resource):
 
     @ns.response(200, 'Success', fields.List(fields.Nested(code_20x_swg)))
     def get(self):
-        type = request.args.get("type")
-        if type:
+        response = ProjectDBModel.query
+        if request.args.get('type'):
             enumType = None
             for item in ProjectTypeEnum:
-                if item.value == type:
+                if item.value == request.args.get('type'):
                     enumType = item
-            response_object =\
-                [project.serialize() for project
-                    in ProjectDBModel.query.filter_by(type=enumType).all()]
-        else:
-            response_object = \
-                [project.serialize() for project in ProjectDBModel.query.all()]
+            response = response.filter_by(type=enumType)
+        if request.args.get('name'):
+            response = response.filter(ProjectDBModel.name.contains(request.args.get('name')))
+        if request.args.get('maxGoal') and request.args.get('minGoal'):
+            response = response.filter(ProjectDBModel.goal >= int(request.args.get('minGoal')))\
+                                .filter(ProjectDBModel.goal <= int(request.args.get('maxGoal')))
+        response_object = \
+            [project.serialize() for project in response.all()]
         return response_object, 200
 
     @ns.expect(body_swg)
