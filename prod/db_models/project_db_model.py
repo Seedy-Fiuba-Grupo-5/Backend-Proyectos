@@ -24,6 +24,7 @@ class ProjectDBModel(db.Model):
     image = db.Column(db.Text,
                       nullable=False,
                       default='')
+    seer = db.Column(db.String(128))
 
     def __init__(self,
                  name, description, hashtags, type, goal,
@@ -36,6 +37,14 @@ class ProjectDBModel(db.Model):
         self.endDate = endDate
         self.location = location
         self.image = image
+        self.seer = ""
+
+    @staticmethod
+    def add_seer(string,
+                 id_project):
+        user_model = ProjectDBModel.query.filter_by(id=id_project).first()
+        user_model.seer = string
+        db.session.commit()
 
     @classmethod
     def create(cls,
