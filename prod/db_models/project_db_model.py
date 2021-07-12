@@ -24,6 +24,9 @@ class ProjectDBModel(db.Model):
     image = db.Column(db.Text,
                       nullable=False,
                       default='')
+    video = db.Column(db.Text,
+                      nullable=True,
+                      default='')
 
     def __init__(self,
                  name, description, hashtags, type, goal,
