@@ -21,6 +21,9 @@ class ProjectDBModel(db.Model):
                         nullable=False)
     location = db.Column(db.String(128),
                          nullable=False)
+    path = db.Column(db.Text,
+                     nullable=False,
+                     default='')
     image = db.Column(db.Text,
                       nullable=False,
                       default='')

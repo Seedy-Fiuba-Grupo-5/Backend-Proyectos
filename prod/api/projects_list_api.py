@@ -1,12 +1,12 @@
-import json
 from flask import request
 from flask_restx import Namespace, Resource, fields
+
 from prod.db_models.project_db_model import ProjectDBModel
-from prod.schemas.project_options import ProjectTypeEnum
-from prod.schemas.project_required_body import project_required_body
-from prod.schemas.project_representation import project_representation
-from prod.schemas.missing_values import missing_values, MISSING_VALUES_ERROR
 from prod.schemas.constants import PROJECT_FIELDS
+from prod.schemas.missing_values import missing_values, MISSING_VALUES_ERROR
+from prod.schemas.project_options import ProjectTypeEnum
+from prod.schemas.project_representation import project_representation
+from prod.schemas.project_required_body import project_required_body
 
 ns = Namespace(
     'projects',
@@ -31,10 +31,13 @@ class ProjectsListResource(Resource):
                     enumType = item
             response = response.filter_by(type=enumType)
         if request.args.get('name'):
-            response = response.filter(ProjectDBModel.name.contains(request.args.get('name')))
+            response = response.filter(
+                ProjectDBModel.name.contains(request.args.get('name')))
         if request.args.get('maxGoal') and request.args.get('minGoal'):
-            response = response.filter(ProjectDBModel.goal >= int(request.args.get('minGoal')))\
-                                .filter(ProjectDBModel.goal <= int(request.args.get('maxGoal')))
+            response = response.filter(ProjectDBModel.goal >=
+                                       int(request.args.get('minGoal'))) \
+                .filter(ProjectDBModel.goal <=
+                        int(request.args.get('maxGoal')))
         response_object = \
             [project.serialize() for project in response.all()]
         return response_object, 200
