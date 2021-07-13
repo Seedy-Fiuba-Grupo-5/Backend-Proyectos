@@ -22,7 +22,7 @@ class ProjectDBModel(db.Model):
     location = db.Column(db.String(128),
                          nullable=False)
     path = db.Column(db.Text,
-                     nullable=False,
+                     nullable=True,
                      default='')
     image = db.Column(db.Text,
                       nullable=False,
