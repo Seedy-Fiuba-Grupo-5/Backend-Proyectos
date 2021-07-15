@@ -95,7 +95,7 @@ class ProjectDBModel(db.Model):
             'image': self.image,
             'video': self.video,
             'path': self.path,
-            'seer':self.seer
+            'seer': self.seer
         }
 
     @staticmethod
