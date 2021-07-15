@@ -133,6 +133,7 @@ Nota 1: Manualmente, se debe agregar las nuevas migraciones
 a traves del comando `flask db migrate` descrito en la sección
 anterior. Esto es gran importancia antes de subir la nueva
 instancia de la aplicacion a Heroku.
+
 Nota 2: Este comando ya es invocado desde el archivo
 docker-entrypoint.sh antes de invocar a la aplicación web.
 
