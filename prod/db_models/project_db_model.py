@@ -30,6 +30,7 @@ class ProjectDBModel(db.Model):
     video = db.Column(db.Text,
                       nullable=True,
                       default='')
+    seer = db.Column(db.String(128))
 
     def __init__(self,
                  name, description, hashtags, type, goal,
@@ -42,6 +43,14 @@ class ProjectDBModel(db.Model):
         self.endDate = endDate
         self.location = location
         self.image = image
+        self.seer = ""
+
+    @staticmethod
+    def add_seer(string,
+                 id_project):
+        user_model = ProjectDBModel.query.filter_by(id=id_project).first()
+        user_model.seer = string
+        db.session.commit()
 
     @classmethod
     def create(cls,
@@ -85,7 +94,8 @@ class ProjectDBModel(db.Model):
             'location': self.location,
             'image': self.image,
             'video': self.video,
-            'path': self.path
+            'path': self.path,
+            'seer':self.seer
         }
 
     @staticmethod
