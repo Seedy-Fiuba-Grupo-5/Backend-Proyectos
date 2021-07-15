@@ -83,7 +83,9 @@ class ProjectDBModel(db.Model):
             'goal': self.goal,
             'endDate': self.endDate,
             'location': self.location,
-            'image': self.image
+            'image': self.image,
+            'video': self.video,
+            'path': self.path
         }
 
     @staticmethod
