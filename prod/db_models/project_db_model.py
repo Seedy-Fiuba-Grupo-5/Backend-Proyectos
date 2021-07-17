@@ -30,7 +30,8 @@ class ProjectDBModel(db.Model):
     video = db.Column(db.Text,
                       nullable=True,
                       default='')
-    seer = db.Column(db.String(128))
+    seer = db.Column(db.String(128),
+                     nullable=True)
 
     def __init__(self,
                  name, description, hashtags, type, goal,
