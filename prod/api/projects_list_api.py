@@ -1,10 +1,12 @@
 from flask import request
 from flask_restx import Namespace, Resource, fields
+
 from prod.db_models.project_db_model import ProjectDBModel
-from prod.schemas.project_required_body import project_required_body
-from prod.schemas.project_representation import project_representation
-from prod.schemas.missing_values import missing_values, MISSING_VALUES_ERROR
 from prod.schemas.constants import PROJECT_FIELDS
+from prod.schemas.missing_values import missing_values, MISSING_VALUES_ERROR
+from prod.schemas.project_options import ProjectTypeEnum
+from prod.schemas.project_representation import project_representation
+from prod.schemas.project_required_body import project_required_body
 
 ns = Namespace(
     'projects',
@@ -21,8 +23,23 @@ class ProjectsListResource(Resource):
 
     @ns.response(200, 'Success', fields.List(fields.Nested(code_20x_swg)))
     def get(self):
-        response_object =\
-            [project.serialize() for project in ProjectDBModel.query.all()]
+        response = ProjectDBModel.query
+        if request.args.get('type'):
+            enumType = None
+            for item in ProjectTypeEnum:
+                if item.value == request.args.get('type'):
+                    enumType = item
+            response = response.filter_by(type=enumType)
+        if request.args.get('name'):
+            response = response.filter(
+                ProjectDBModel.name.contains(request.args.get('name')))
+        if request.args.get('maxGoal') and request.args.get('minGoal'):
+            response = response.filter(ProjectDBModel.goal >=
+                                       int(request.args.get('minGoal'))) \
+                .filter(ProjectDBModel.goal <=
+                        int(request.args.get('maxGoal')))
+        response_object = \
+            [project.serialize() for project in response.all()]
         return response_object, 200
 
     @ns.expect(body_swg)
@@ -30,18 +47,21 @@ class ProjectsListResource(Resource):
     @ns.response(400, MISSING_VALUES_ERROR, code_400_swg)
     def post(self):
         json = request.get_json()
-        if not self.check_values(json, PROJECT_FIELDS):
+        if not self.check_values(json, PROJECT_FIELDS[:-1]):
             ns.abort(400, status=MISSING_VALUES_ERROR)
-        project_model = ProjectDBModel.create(
-            name=json['name'],
-            description=json['description'],
-            hashtags=json['hashtags'],
-            type=json['type'],
-            goal=json['goal'],
-            endDate=json['endDate'],
-            location=json['location'],
-            image=json['image']
-        )
+        try:
+            project_model = ProjectDBModel.create(
+                name=json['name'],
+                description=json['description'],
+                hashtags=json['hashtags'],
+                type=json['type'],
+                goal=json['goal'],
+                endDate=json['endDate'],
+                location=json['location'],
+                image=json.get('image', '')
+            )
+        except TypeError:
+            ns.abort(400, status="The type selected in not a valid one")
         response_object = project_model.serialize()
         return response_object, 201
 

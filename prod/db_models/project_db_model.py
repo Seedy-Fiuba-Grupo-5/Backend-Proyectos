@@ -1,4 +1,5 @@
 from prod import db
+from prod.schemas.project_options import ProjectTypeEnum
 
 
 class ProjectDBModel(db.Model):
@@ -12,7 +13,7 @@ class ProjectDBModel(db.Model):
                             nullable=False)
     hashtags = db.Column(db.String(1000),
                          nullable=False)
-    type = db.Column(db.String(128),
+    type = db.Column(db.Enum(ProjectTypeEnum),
                      nullable=False)
     goal = db.Column(db.Integer,
                      nullable=False)
@@ -20,9 +21,16 @@ class ProjectDBModel(db.Model):
                         nullable=False)
     location = db.Column(db.String(128),
                          nullable=False)
+    path = db.Column(db.Text,
+                     nullable=True,
+                     default='')
     image = db.Column(db.Text,
                       nullable=False,
                       default='')
+    video = db.Column(db.Text,
+                      nullable=True,
+                      default='')
+    seer = db.Column(db.String(128))
 
     def __init__(self,
                  name, description, hashtags, type, goal,
@@ -35,12 +43,26 @@ class ProjectDBModel(db.Model):
         self.endDate = endDate
         self.location = location
         self.image = image
+        self.seer = ""
+
+    @staticmethod
+    def add_seer(string,
+                 id_project):
+        user_model = ProjectDBModel.query.filter_by(id=id_project).first()
+        user_model.seer = string
+        db.session.commit()
 
     @classmethod
     def create(cls,
                name, description, hashtags, type, goal,
                endDate, location, image):
-        project_model = ProjectDBModel(name, description, hashtags, type,
+        enumType = None
+        for item in ProjectTypeEnum:
+            if item.value == type:
+                enumType = item
+        if not enumType:
+            raise TypeError("invalid enum")
+        project_model = ProjectDBModel(name, description, hashtags, enumType,
                                        goal, endDate, location, image)
         db.session.add(project_model)
         db.session.commit()
@@ -50,7 +72,13 @@ class ProjectDBModel(db.Model):
     def update(self,
                name, description, hashtags, type, goal,
                endDate, location, image):
-        self.__init__(name, description, hashtags, type, goal,
+        enumType = None
+        for item in ProjectTypeEnum:
+            if item.value == type:
+                enumType = item
+        if not enumType:
+            raise TypeError("invalid enum")
+        self.__init__(name, description, hashtags, enumType, goal,
                       endDate, location, image)
         db.session.commit()
 
@@ -60,11 +88,14 @@ class ProjectDBModel(db.Model):
             'name': self.name,
             'description': self.description,
             'hashtags': self.hashtags,
-            'type': self.type,
+            'type': self.type.value,
             'goal': self.goal,
             'endDate': self.endDate,
             'location': self.location,
-            'image': self.image
+            'image': self.image,
+            'video': self.video,
+            'path': self.path,
+            'seer': self.seer
         }
 
     @staticmethod
