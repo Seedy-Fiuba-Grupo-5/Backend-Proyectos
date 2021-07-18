@@ -1,4 +1,5 @@
 from prod import db
+import datetime
 from prod.schemas.project_options import ProjectTypeEnum
 
 
@@ -32,6 +33,8 @@ class ProjectDBModel(db.Model):
                       default='')
     seer = db.Column(db.String(128),
                      nullable=True)
+    creation_date = db.Column(db.DateTime,
+                              default=datetime.datetime.utcnow)
 
     def __init__(self,
                  name, description, hashtags, type, goal,
@@ -45,6 +48,7 @@ class ProjectDBModel(db.Model):
         self.location = location
         self.image = image
         self.seer = ""
+        self.creation_date = datetime.datetime.utcnow
 
     @staticmethod
     def add_seer(string,
@@ -96,9 +100,9 @@ class ProjectDBModel(db.Model):
             'image': self.image,
             'video': self.video,
             'path': self.path,
-            'seer': self.seer
+            'seer': self.seer,
+            'creation_date': self.creation_date.strftime("%d/%m/%Y")
         }
-
     @staticmethod
     def delete(deleted_id):
         projects_query = ProjectDBModel.query.filter_by(id=deleted_id)
