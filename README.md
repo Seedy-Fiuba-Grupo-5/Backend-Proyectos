@@ -121,6 +121,7 @@ docker-compose exec service_projects_web flask db init
 ```
 
 ### Agregar nueva migración
+Ejecutar con el servicio levantado.
 ```
 docker-compose exec service_projects_web flask db migrate -m "descripción de la migración"
 ```
