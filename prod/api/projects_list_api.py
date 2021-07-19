@@ -1,6 +1,6 @@
 from flask import request
 from flask_restx import Namespace, Resource, fields
-
+from datetime import date
 from prod.db_models.project_db_model import ProjectDBModel
 from prod.schemas.constants import PROJECT_FIELDS
 from prod.schemas.missing_values import missing_values, MISSING_VALUES_ERROR
@@ -47,6 +47,7 @@ class ProjectsListResource(Resource):
     @ns.response(400, MISSING_VALUES_ERROR, code_400_swg)
     def post(self):
         json = request.get_json()
+        #date = date.today().strftime("%m/%d/%Y")
         if not self.check_values(json, PROJECT_FIELDS[:-1]):
             ns.abort(400, status=MISSING_VALUES_ERROR)
         try:
