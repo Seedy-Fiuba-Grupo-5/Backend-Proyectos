@@ -32,10 +32,12 @@ class ProjectDBModel(db.Model):
                       default='')
     seer = db.Column(db.String(128),
                      nullable=True)
+    createdOn = db.Column(db.String(128),
+                          nullable=True)
 
     def __init__(self,
                  name, description, hashtags, type, goal,
-                 endDate, location, image):
+                 endDate, location, image, createdOn):
         self.name = name
         self.description = description
         self.hashtags = hashtags
@@ -45,6 +47,7 @@ class ProjectDBModel(db.Model):
         self.location = location
         self.image = image
         self.seer = ""
+        self.createdOn = createdOn
 
     @staticmethod
     def add_seer(string,
@@ -56,7 +59,7 @@ class ProjectDBModel(db.Model):
     @classmethod
     def create(cls,
                name, description, hashtags, type, goal,
-               endDate, location, image):
+               endDate, location, image, createdOn):
         enumType = None
         for item in ProjectTypeEnum:
             if item.value == type:
@@ -64,7 +67,7 @@ class ProjectDBModel(db.Model):
         if not enumType:
             raise TypeError("invalid enum")
         project_model = ProjectDBModel(name, description, hashtags, enumType,
-                                       goal, endDate, location, image)
+                                       goal, endDate, location, image, createdOn)
         db.session.add(project_model)
         db.session.commit()
         db.session.refresh(project_model)
@@ -80,7 +83,7 @@ class ProjectDBModel(db.Model):
         if not enumType:
             raise TypeError("invalid enum")
         self.__init__(name, description, hashtags, enumType, goal,
-                      endDate, location, image)
+                      endDate, location, image, self.createdOn)
         db.session.commit()
 
     def serialize(self):
@@ -96,7 +99,8 @@ class ProjectDBModel(db.Model):
             'image': self.image,
             'video': self.video,
             'path': self.path,
-            'seer': self.seer
+            'seer': self.seer,
+            'createdOn': self.createdOn
         }
 
     @staticmethod

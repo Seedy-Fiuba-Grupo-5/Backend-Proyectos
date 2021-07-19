@@ -14,7 +14,8 @@ ns = Namespace(
 class ProjectsListResource(Resource):
     metrics_representation = Model('ProjectMetrics', {
         'most_popular_type': fields.Integer(description='Most popular type of project'),
-        'avg_goal': fields.Integer(description='Average project goal')
+        'avg_goal': fields.Integer(description='Average project goal'),
+        'avg_duration': fields.Integer(description='Average project duration in months')
     })
     code_20x_swg = ns.model(metrics_representation.name,
                             metrics_representation)
@@ -24,6 +25,7 @@ class ProjectsListResource(Resource):
         response_body = {}
         response_body["most_popular_type"] = self.get_most_popular_type()
         response_body["avg_goal"] = self.calculate_avg_goal()
+        response_body["avg_duration"] = self.calculate_avg_duration()
         return response_body, 200
 
     def get_most_popular_type(self):
@@ -44,4 +46,14 @@ class ProjectsListResource(Resource):
         for project in ProjectDBModel.query.all():
             goal_sum += project.goal
         return goal_sum / total
+
+    def calculate_avg_duration(self):
+        total = len([project.id for project in ProjectDBModel.query.all()])
+        if total <= 0:
+            return 0
+        durations_sum = 0
+        for project in ProjectDBModel.query.all():
+            diff = datetime.strptime(project.endDate, '%d/%m/%Y') - datetime.strptime(project.createdOn, '%d/%m/%Y')
+            durations_sum += diff.days/30
+        return durations_sum/total
 

@@ -47,10 +47,10 @@ def test_get_project_con_filtro_devuelve_solo_los_con_ese_tipo(
     client = test_app.test_client()
     session.add(ProjectDBModel(name='Project X', description='description', hashtags='#prueba',
                                type='art', goal=1000, endDate='12/02/2021', location='Buenos Aires',
-                               image='www.an_image_url.com'))
+                               image='www.an_image_url.com', createdOn='12/02/2021'))
     session.add(ProjectDBModel(name='Project X', description='description', hashtags='#prueba',
                                type='comics', goal=1000, endDate='12/02/2021', location='Buenos Aires',
-                               image='www.an_image_url.com'))
+                               image='www.an_image_url.com', createdOn='12/02/2021'))
     response = client.get("/projects?type")
     projects = json.loads(response.data.decode())
     assert len(projects) == 2

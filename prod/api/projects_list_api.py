@@ -47,7 +47,7 @@ class ProjectsListResource(Resource):
     @ns.response(400, MISSING_VALUES_ERROR, code_400_swg)
     def post(self):
         json = request.get_json()
-        #date = date.today().strftime("%m/%d/%Y")
+        today = date.today().strftime("%d/%m/%Y")
         if not self.check_values(json, PROJECT_FIELDS[:-1]):
             ns.abort(400, status=MISSING_VALUES_ERROR)
         try:
@@ -59,7 +59,8 @@ class ProjectsListResource(Resource):
                 goal=json['goal'],
                 endDate=json['endDate'],
                 location=json['location'],
-                image=json.get('image', '')
+                image=json.get('image', ''),
+                createdOn=today
             )
         except TypeError:
             ns.abort(400, status="The type selected in not a valid one")

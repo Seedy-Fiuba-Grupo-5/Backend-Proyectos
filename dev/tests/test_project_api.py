@@ -7,7 +7,7 @@ def test_db_with_only_project_id_1_name_Project_X_GET_id_1_should_return_just_th
     session = recreate_db(test_database)
     session.add(ProjectDBModel(name='Project X', description='description', hashtags='#prueba',
                                type='art', goal=1000, endDate='12/02/2021', location='Buenos Aires',
-                               image='www.an_image_url.com'))
+                               image='www.an_image_url.com', createdOn='12/02/2021'))
     session.commit()
     client = test_app.test_client()
     response = client.get("/projects/1")
