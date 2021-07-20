@@ -12,7 +12,8 @@ def test_delete_element_from_db(test_app, test_database):
                                       '2022/06/07',
                                       'a location',
                                       'www.an-image.com',
-                                      "2022/06/07"))
+                                      "2022/06/07",
+                                      'a'))
     session.commit()
     associated_id = ProjectDBModel.query.filter_by(name="hola")
     assert associated_id.count() == 1
@@ -31,7 +32,8 @@ def test_add_seer(test_app, test_database):
                                       '2022/06/07',
                                       'a location',
                                       'www.an-image.com',
-                                      '2022/06/07'))
+                                      '2022/06/07',
+                                      'a'))
     session.commit()
     user_model = ProjectDBModel.query.filter_by(id=1).first()
     assert user_model.seer == ""

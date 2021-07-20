@@ -60,7 +60,8 @@ class ProjectsListResource(Resource):
                 endDate=json['endDate'],
                 location=json['location'],
                 image=json.get('image', ''),
-                createdOn=today
+                createdOn=today,
+                path=json['path']
             )
         except TypeError:
             ns.abort(400, status="The type selected in not a valid one")

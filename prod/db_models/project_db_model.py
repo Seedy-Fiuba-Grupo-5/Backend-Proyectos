@@ -37,7 +37,7 @@ class ProjectDBModel(db.Model):
 
     def __init__(self,
                  name, description, hashtags, type, goal,
-                 endDate, location, image, createdOn):
+                 endDate, location, image, createdOn, path):
         self.name = name
         self.description = description
         self.hashtags = hashtags
@@ -48,6 +48,7 @@ class ProjectDBModel(db.Model):
         self.image = image
         self.seer = ""
         self.createdOn = createdOn
+        self.path = path
 
     @staticmethod
     def add_seer(string,
@@ -59,7 +60,7 @@ class ProjectDBModel(db.Model):
     @classmethod
     def create(cls,
                name, description, hashtags, type, goal,
-               endDate, location, image, createdOn):
+               endDate, location, image, createdOn, path):
         enumType = None
         for item in ProjectTypeEnum:
             if item.value == type:
@@ -67,7 +68,8 @@ class ProjectDBModel(db.Model):
         if not enumType:
             raise TypeError("invalid enum")
         project_model = ProjectDBModel(name, description, hashtags, enumType,
-                                       goal, endDate, location, image, createdOn)
+                                       goal, endDate, location, image,
+                                       createdOn, path)
         db.session.add(project_model)
         db.session.commit()
         db.session.refresh(project_model)
@@ -75,7 +77,7 @@ class ProjectDBModel(db.Model):
 
     def update(self,
                name, description, hashtags, type, goal,
-               endDate, location, image, video):
+               endDate, location, image, video, path):
         enumType = None
         for item in ProjectTypeEnum:
             if item.value == type:
@@ -83,7 +85,7 @@ class ProjectDBModel(db.Model):
         if not enumType:
             raise TypeError("invalid enum")
         self.__init__(name, description, hashtags, enumType, goal,
-                      endDate, location, image, self.createdOn)
+                      endDate, location, image, self.createdOn, path)
         self.video = video  # Agregar un test para esto
         db.session.commit()
 
