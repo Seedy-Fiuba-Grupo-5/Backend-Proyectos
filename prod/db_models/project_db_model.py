@@ -75,7 +75,7 @@ class ProjectDBModel(db.Model):
 
     def update(self,
                name, description, hashtags, type, goal,
-               endDate, location, image):
+               endDate, location, image, video):
         enumType = None
         for item in ProjectTypeEnum:
             if item.value == type:
@@ -84,6 +84,7 @@ class ProjectDBModel(db.Model):
             raise TypeError("invalid enum")
         self.__init__(name, description, hashtags, enumType, goal,
                       endDate, location, image, self.createdOn)
+        self.video = video  # Agregar un test para esto
         db.session.commit()
 
     def serialize(self):

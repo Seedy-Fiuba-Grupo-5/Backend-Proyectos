@@ -10,6 +10,7 @@ ns = Namespace(
     description='All projects metrics'
 )
 
+
 @ns.route('')
 class ProjectsListResource(Resource):
     metrics_representation = Model('ProjectMetrics', {
@@ -32,7 +33,8 @@ class ProjectsListResource(Resource):
         max = 0
         current_type = "None"
         for item in ProjectTypeEnum:
-            total = len([project.id for project in ProjectDBModel.query.filter_by(type=item)])
+            total = len(
+                [project.id for project in ProjectDBModel.query.filter_by(type=item)])
             if total > max:
                 max = total
                 current_type = item.value
@@ -53,7 +55,7 @@ class ProjectsListResource(Resource):
             return 0
         durations_sum = 0
         for project in ProjectDBModel.query.all():
-            diff = datetime.strptime(project.endDate, '%d/%m/%Y') - datetime.strptime(project.createdOn, '%d/%m/%Y')
+            diff = datetime.strptime(
+                project.endDate, '%d/%m/%Y') - datetime.strptime(project.createdOn, '%d/%m/%Y')
             durations_sum += diff.days/30
         return durations_sum/total
-

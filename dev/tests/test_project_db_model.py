@@ -39,4 +39,3 @@ def test_add_seer(test_app, test_database):
                             1)
     user_model = ProjectDBModel.query.filter_by(id=1).first()
     assert user_model.seer == "Brian"
-
