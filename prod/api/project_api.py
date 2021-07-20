@@ -45,7 +45,8 @@ class ProjectResource(Resource):
                 endDate=json.get('endDate', project_model.endDate),
                 location=json.get('location', project_model.location),
                 image=json.get('image', project_model.image),
-                video=json.get('video', project_model.video)
+                video=json.get('video', project_model.video),
+                path=json.get('path',project_model.path)
             )
         except TypeError:
             ns.abort(400, status="The type selected in not a valid one")
