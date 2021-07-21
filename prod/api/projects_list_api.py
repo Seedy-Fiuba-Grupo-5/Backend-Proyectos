@@ -7,11 +7,19 @@ from prod.schemas.missing_values import missing_values, MISSING_VALUES_ERROR
 from prod.schemas.project_options import ProjectTypeEnum
 from prod.schemas.project_representation import project_representation
 from prod.schemas.project_required_body import project_required_body
+from math import acos, cos, sin, radians
 
 ns = Namespace(
     'projects',
     description='All projects related operations'
 )
+
+
+def parse_hashtag(hashtag):
+    for word in hashtag.split():
+        if word[0] == '#':
+            return word
+    return None
 
 
 @ns.route('')
@@ -38,6 +46,23 @@ class ProjectsListResource(Resource):
                                        int(request.args.get('minGoal'))) \
                 .filter(ProjectDBModel.goal <=
                         int(request.args.get('maxGoal')))
+        if request.args.get('hashtag'):
+            hashtag = parse_hashtag(request.args.get('hashtag'))
+            if hashtag:
+                response = response.filter(ProjectDBModel.hashtags.contains(hashtag))
+        if request.args.get('lat') and request.args.get('lon') and request.args.get('radio'):
+            lat = radians(float(request.args.get('lat')))
+            lon = radians(float(request.args.get('lon')))
+            radio_km = float(request.args.get('radio'))
+            new_response = []
+            for item in response:
+                distancia_km = 6371.01 * acos(
+                    sin(lat) * sin(item.lat) + cos(lat) * cos(item.lat) * cos(
+                        lon - item.lon))
+                if distancia_km <= radio_km:
+                    new_response.append(item.id)
+            response = response.filter(ProjectDBModel.id.in_(new_response))
+
         response_object = \
             [project.serialize() for project in response.all()]
         return response_object, 200
