@@ -49,7 +49,8 @@ class ProjectsListResource(Resource):
         if request.args.get('hashtag'):
             hashtag = parse_hashtag(request.args.get('hashtag'))
             if hashtag:
-                response = response.filter(ProjectDBModel.hashtags.contains(hashtag))
+                response = response.filter(
+                    ProjectDBModel.hashtags.contains(hashtag))
         if request.args.get('lat') and request.args.get('lon') and request.args.get('radio'):
             lat = radians(float(request.args.get('lat')))
             lon = radians(float(request.args.get('lon')))
@@ -57,8 +58,8 @@ class ProjectsListResource(Resource):
             new_response = []
             for item in response:
                 distancia_km = 6371.01 * acos(
-                    sin(lat) * sin(item.lat) + cos(lat) * cos(item.lat) * cos(
-                        lon - item.lon))
+                    sin(lat) * sin(radians(item.lat)) + cos(lat) * cos(radians(item.lat)) * cos(
+                        lon - radians(item.lon)))
                 if distancia_km <= radio_km:
                     new_response.append(item.id)
             response = response.filter(ProjectDBModel.id.in_(new_response))
@@ -86,7 +87,9 @@ class ProjectsListResource(Resource):
                 location=json['location'],
                 image=json.get('image', ''),
                 createdOn=today,
-                path=json['path']
+                path=json['path'],
+                lat=json['lat'],
+                lon=json['lon']
             )
         except TypeError:
             ns.abort(400, status="The type selected in not a valid one")
