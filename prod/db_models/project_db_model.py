@@ -1,5 +1,6 @@
 from prod import db
 from prod.schemas.project_options import ProjectTypeEnum
+from prod.db_models.favorites_db_model import FavoritesProjectDBModel
 
 
 class ProjectDBModel(db.Model):
@@ -111,7 +112,8 @@ class ProjectDBModel(db.Model):
             'seer': self.seer,
             'createdOn': self.createdOn,
             'lat': self.lat,
-            'lon': self.lon
+            'lon': self.lon,
+            'favorites':  FavoritesProjectDBModel.get_favorites_of_project_id(self.id)
         }
 
     @staticmethod
