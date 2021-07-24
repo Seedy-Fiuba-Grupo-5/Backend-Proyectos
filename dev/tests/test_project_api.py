@@ -8,7 +8,7 @@ def test_db_with_only_project_id_1_name_Project_X_GET_id_1_should_return_just_th
     session.add(ProjectDBModel(name='Project X', description='description', hashtags='#prueba',
                                type='art', goal=1000, endDate='12/02/2021', location='Buenos Aires',
                                image='www.an_image_url.com',
-                               createdOn='12/02/2021', path='a'))
+                               createdOn='12/02/2021', path='a', lat=50, lon=20.5))
     session.commit()
     client = test_app.test_client()
     response = client.get("/projects/1")
@@ -49,7 +49,7 @@ def test_patch_project_id_cambiar_todos_los_contenidos_del_proyecto(
     session = recreate_db(test_database)
     old_project = {'name': 'a name', 'description': 'a description', 'hashtags': '#someHashtags',
                    'type': 'Art', 'goal': 111, 'endDate': '2022/06/07', 'location': 'a location',
-                   'image': 'www.an-image-url.com', 'path': 'a'}
+                   'image': 'www.an-image-url.com', 'path': 'a', 'lat': 50, "lon": 20.5}
     client = test_app.test_client()
     post_resp = client.post("/projects", json=old_project)
     post_data = json.loads(post_resp.data.decode())
@@ -92,7 +92,7 @@ def test_patch_project_id_con_body_vacio_no_cambia_nada_del_proyecto(
     session = recreate_db(test_database)
     old_project = {'name': 'a name', 'description': 'a description', 'hashtags': '#someHashtags',
                    'type': 'Comics', 'goal': 111, 'endDate': '2022/06/07', 'location': 'a location',
-                   'image': 'www.an-image-url.com', 'path': 'a'}
+                   'image': 'www.an-image-url.com', 'path': 'a', 'lat': 50, "lon": 20.5}
     client = test_app.test_client()
     post_resp = client.post("/projects", json=old_project)
     post_data = json.loads(post_resp.data.decode())
@@ -126,7 +126,7 @@ def test_delete_project_id_elimina_el_proyecto(
     client = test_app.test_client()
     project = {'name': 'a name', 'description': 'a description', 'hashtags': '#someHashtags',
                'type': 'Comics', 'goal': 111, 'endDate': '2022/06/07', 'location': 'a location',
-               'image': 'an image'}
+               'image': 'an image', 'lat': 50, "lon": 20.5, 'path': '/img'}
 
     post_resp = client.post("/projects", json=project)
     post_data = json.loads(post_resp.data.decode())
@@ -140,7 +140,7 @@ def test_delete_project_id_elimina_el_proyecto(
     assert get_resp.status_code == 404
 
 
-def test_delete_project_id_elimina_el_proyecto(
+def test_delete_project_id_no_elimina_el_proyecto(
         test_app,
         test_database):
     """
@@ -157,3 +157,22 @@ def test_delete_project_id_elimina_el_proyecto(
     assert delete_resp.status_code == 404
     delete_data = json.loads(delete_resp.data.decode())
     assert delete_data['status'] == 'The project requested could not be found'
+
+def test_add_rating_to_project(test_app, test_database):
+    session = recreate_db(test_database)
+    session.add(ProjectDBModel(name='Project Rated', description='description', hashtags='#prueba',
+                               type='art', goal=1000, endDate='12/02/2021', location='Buenos Aires',
+                               image='www.an_image_url.com',
+                               createdOn='12/02/2021', path='a', lat=50, lon=20.5))
+    session.commit()
+    client = test_app.test_client()
+    response = client.post("/projects/1/rate", json={"rating": 5})
+    assert response.status_code == 200
+    project = json.loads(response.data.decode())
+    assert project['rating'] == 5
+    response = client.post("/projects/1/rate", json={"rating": 1})
+    assert response.status_code == 200
+    project = json.loads(response.data.decode())
+    assert project['rating'] == 3
+
+

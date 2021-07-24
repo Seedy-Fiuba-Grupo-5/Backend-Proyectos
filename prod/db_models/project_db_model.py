@@ -1,5 +1,6 @@
 from prod import db
 from prod.schemas.project_options import ProjectTypeEnum
+from prod.db_models.favorites_db_model import FavoritesProjectDBModel
 
 
 class ProjectDBModel(db.Model):
@@ -34,10 +35,20 @@ class ProjectDBModel(db.Model):
                      nullable=True)
     createdOn = db.Column(db.String(128),
                           nullable=True)
+    lat = db.Column(db.Float,
+                    nullable=False)
+    lon = db.Column(db.Float,
+                    nullable=False)
+    totalRatings = db.Column(db.Integer,
+                             nullable=True,
+                             default=0)
+    rating = db.Column(db.Integer,
+                       nullable=True,
+                       default=0)
 
     def __init__(self,
                  name, description, hashtags, type, goal,
-                 endDate, location, image, createdOn, path):
+                 endDate, location, image, createdOn, path, lat, lon):
         self.name = name
         self.description = description
         self.hashtags = hashtags
@@ -49,6 +60,8 @@ class ProjectDBModel(db.Model):
         self.seer = ""
         self.createdOn = createdOn
         self.path = path
+        self.lat = lat
+        self.lon = lon
 
     @staticmethod
     def add_seer(string,
@@ -60,7 +73,7 @@ class ProjectDBModel(db.Model):
     @classmethod
     def create(cls,
                name, description, hashtags, type, goal,
-               endDate, location, image, createdOn, path):
+               endDate, location, image, createdOn, path, lat, lon):
         enumType = None
         for item in ProjectTypeEnum:
             if item.value == type:
@@ -69,7 +82,7 @@ class ProjectDBModel(db.Model):
             raise TypeError("invalid enum")
         project_model = ProjectDBModel(name, description, hashtags, enumType,
                                        goal, endDate, location, image,
-                                       createdOn, path)
+                                       createdOn, path, lat, lon)
         db.session.add(project_model)
         db.session.commit()
         db.session.refresh(project_model)
@@ -77,7 +90,7 @@ class ProjectDBModel(db.Model):
 
     def update(self,
                name, description, hashtags, type, goal,
-               endDate, location, image, video, path):
+               endDate, location, image, video, path, lat, lon):
         enumType = None
         for item in ProjectTypeEnum:
             if item.value == type:
@@ -85,8 +98,16 @@ class ProjectDBModel(db.Model):
         if not enumType:
             raise TypeError("invalid enum")
         self.__init__(name, description, hashtags, enumType, goal,
-                      endDate, location, image, self.createdOn, path)
+                      endDate, location, image, self.createdOn, path,
+                      lat, lon)
         self.video = video  # Agregar un test para esto
+        db.session.commit()
+
+    def add_rating(self, rating):
+        if rating <= 0 or rating > 5:
+            raise TypeError("invalid rating")
+        self.rating = round((self.rating*self.totalRatings + rating)/(self.totalRatings+1))
+        self.totalRatings += 1
         db.session.commit()
 
     def serialize(self):
@@ -103,7 +124,11 @@ class ProjectDBModel(db.Model):
             'video': self.video,
             'path': self.path,
             'seer': self.seer,
-            'createdOn': self.createdOn
+            'createdOn': self.createdOn,
+            'lat': self.lat,
+            'lon': self.lon,
+            'favorites': FavoritesProjectDBModel.get_favorites_of_project_id(self.id),
+            'rating': self.rating
         }
 
     @staticmethod
