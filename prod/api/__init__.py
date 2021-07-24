@@ -4,6 +4,7 @@ from .project_api import ns as project_ns
 from .projects_list_api import ns as projects_list_ns
 from .project_metrics_api import ns as metrics_ns
 from .one_project_favorites_api import ns as favorites_ns
+from .project_rate_api import ns as rate_ns
 
 # Base API
 
@@ -19,6 +20,7 @@ api_base.add_namespace(project_ns)
 api_base.add_namespace(projects_list_ns)
 api_base.add_namespace(metrics_ns)
 api_base.add_namespace(favorites_ns)
+api_base.add_namespace(rate_ns)
 
 # API v1
 V1_PREFIX = '/v1/'
