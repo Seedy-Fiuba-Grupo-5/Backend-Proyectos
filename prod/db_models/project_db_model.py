@@ -48,8 +48,7 @@ class ProjectDBModel(db.Model):
 
     def __init__(self,
                  name, description, hashtags, type, goal,
-                 endDate, location, image, createdOn, path, lat, lon,
-                 totalRatings, rating):
+                 endDate, location, image, createdOn, path, lat, lon):
         self.name = name
         self.description = description
         self.hashtags = hashtags
@@ -83,7 +82,7 @@ class ProjectDBModel(db.Model):
             raise TypeError("invalid enum")
         project_model = ProjectDBModel(name, description, hashtags, enumType,
                                        goal, endDate, location, image,
-                                       createdOn, path, lat, lon, 0, 0)
+                                       createdOn, path, lat, lon)
         db.session.add(project_model)
         db.session.commit()
         db.session.refresh(project_model)
@@ -100,7 +99,7 @@ class ProjectDBModel(db.Model):
             raise TypeError("invalid enum")
         self.__init__(name, description, hashtags, enumType, goal,
                       endDate, location, image, self.createdOn, path,
-                      lat, lon, self.totalRatings, self.rating)
+                      lat, lon)
         self.video = video  # Agregar un test para esto
         db.session.commit()
 
@@ -129,8 +128,7 @@ class ProjectDBModel(db.Model):
             'lat': self.lat,
             'lon': self.lon,
             'favorites': FavoritesProjectDBModel.get_favorites_of_project_id(self.id),
-            'rating': self.rating,
-            'tot': self.totalRatings
+            'rating': self.rating
         }
 
     @staticmethod
