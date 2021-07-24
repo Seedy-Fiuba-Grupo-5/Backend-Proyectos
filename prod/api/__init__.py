@@ -3,6 +3,7 @@ from flask_restx import Api
 from .project_api import ns as project_ns
 from .projects_list_api import ns as projects_list_ns
 from .project_metrics_api import ns as metrics_ns
+from .commentary_api import ns as commentary_ns
 
 # Base API
 
@@ -17,6 +18,7 @@ api_base = Api(
 api_base.add_namespace(project_ns)
 api_base.add_namespace(projects_list_ns)
 api_base.add_namespace(metrics_ns)
+api_base.add_namespace(commentary_ns)
 
 # API v1
 V1_PREFIX = '/v1/'
@@ -30,3 +32,5 @@ api_v1 = Api(
 
 api_v1.add_namespace(project_ns)
 api_v1.add_namespace(projects_list_ns)
+api_v1.add_namespace(metrics_ns)
+api_v1.add_namespace(commentary_ns)

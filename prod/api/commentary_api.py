@@ -8,8 +8,9 @@ from prod.schemas.constants import MISSING_VALUES_ERROR, REPEATED_USER_ERROR
 from prod.schemas.constants import USER_NOT_FOUND_ERROR, MISSING_ARGS_ERROR
 from prod.schemas.commentary_code20 import commentary_code20
 
+
 ns = Namespace(
-    name='messages/<int:project_id>',
+    name='commentary/<int:project_id>',
     description='All commentaries of projects related operations'
 )
 
@@ -41,7 +42,7 @@ class UsersListResource(BaseResource):
         try:
             json = request.get_json()
             token_decoded = CommentaryDBModel.decode_auth_token(json['token'])
-            if token_decoded != json['user_id']:
+            if token_decoded != json['id_user']:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
             response_object = CommentaryDBModel.get_messages_from_project(
                 project_id)
@@ -53,7 +54,7 @@ class UsersListResource(BaseResource):
     @ns.response(201, 'Success', code_20x_swg)
     @ns.response(400, MISSING_VALUES_ERROR, code_400_swg)
     def post(self, project_id):
-        """Adds a new message a new user"""
+        """Adds a new message to project"""
         try:
             data = request.get_json()
             missing_args = self.missing_values(data, self.REGISTER_FIELDS)
@@ -64,7 +65,7 @@ class UsersListResource(BaseResource):
             id_user = data['id_user']
             if token_decoded != id_user:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
-            CommentaryDBModel.add_message(data['id_project'],
+            CommentaryDBModel.add_message(project_id,
                                           data['message'])
             response_object = {'id_user': data['id_user'],
                                'token': CommentaryDBModel.encode_auth_token(

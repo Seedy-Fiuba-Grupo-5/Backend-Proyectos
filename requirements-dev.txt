@@ -5,3 +5,4 @@ codecov==2.1.11
 flake8==3.9.1
 autopep8==1.5.7
 pyjwt==1.4.2
+

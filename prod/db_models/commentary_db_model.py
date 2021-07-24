@@ -9,6 +9,7 @@ import jwt
 # y un estado activo que por defecto es True
 class CommentaryDBModel(db.Model):
     __tablename__ = "commentary"
+    EXPIRATION_TIME = 86400  # 1 dia = 86400 segundos
     column_not_exist_in_db = db.Column(db.Integer,
                                        primary_key=True)
     id_1 = db.Column(db.Integer)
