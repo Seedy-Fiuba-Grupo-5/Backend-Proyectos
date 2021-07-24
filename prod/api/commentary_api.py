@@ -2,7 +2,6 @@ from flask_restx import Namespace, fields
 from flask import request
 from prod.api.base_resource import BaseResource
 from prod.db_models.commentary_db_model import CommentaryDBModel
-from prod.db_models.user_db_model import UserDBModel
 from prod.exceptions import BusinessError, RepeatedEmailError, UserBlockedError
 from prod.schemas.commentary_representation import commentary_representation
 from prod.schemas.constants import MISSING_VALUES_ERROR, REPEATED_USER_ERROR
@@ -41,7 +40,7 @@ class UsersListResource(BaseResource):
         """Get all messages data"""
         try:
             json = request.get_json()
-            token_decoded = UserDBModel.decode_auth_token(json['token'])
+            token_decoded = CommentaryDBModel.decode_auth_token(json['token'])
             if token_decoded != json['user_id']:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
             response_object = CommentaryDBModel.get_messages_from_project(
@@ -61,14 +60,14 @@ class UsersListResource(BaseResource):
             if missing_args:
                 ns.abort(400, status=MISSING_VALUES_ERROR,
                          missing_args=missing_args)
-            token_decoded = UserDBModel.decode_auth_token(data['token'])
+            token_decoded = CommentaryDBModel.decode_auth_token(data['token'])
             id_user = data['id_user']
             if token_decoded != id_user:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
             CommentaryDBModel.add_message(data['id_project'],
                                           data['message'])
             response_object = {'id_user': data['id_user'],
-                               'token': UserDBModel.encode_auth_token(
+                               'token': CommentaryDBModel.encode_auth_token(
                                    data['id_user'])}
             return response_object, 201
         except BusinessError as e:
