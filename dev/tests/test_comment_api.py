@@ -5,7 +5,7 @@ from prod.db_models.commentary_db_model import CommentaryDBModel
 
 
 def test_post_commentary(test_app,
-                      test_database):
+                         test_database):
     """Este test muestra como se crea un comentario asociado un proyecto"""
     session = recreate_db(test_database)
     client = test_app.test_client()
@@ -24,7 +24,7 @@ def test_post_commentary(test_app,
 
 
 def test_get_commentary(test_app,
-                      test_database):
+                        test_database):
     """Este test muestra como se obtienen los comentarios asociados a un
     proyecto"""
     session = recreate_db(test_database)
