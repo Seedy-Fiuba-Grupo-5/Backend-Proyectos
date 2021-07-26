@@ -1,4 +1,5 @@
 from prod import db
+from prod.db_models.rating_db_model import RatingDBModel
 from prod.schemas.project_options import ProjectTypeEnum
 from prod.db_models.favorites_db_model import FavoritesProjectDBModel
 
@@ -39,12 +40,6 @@ class ProjectDBModel(db.Model):
                     nullable=False)
     lon = db.Column(db.Float,
                     nullable=False)
-    totalRatings = db.Column(db.Integer,
-                             nullable=True,
-                             default=0)
-    rating = db.Column(db.Integer,
-                       nullable=True,
-                       default=0)
 
     def __init__(self,
                  name, description, hashtags, type, goal,
@@ -103,13 +98,6 @@ class ProjectDBModel(db.Model):
         self.video = video  # Agregar un test para esto
         db.session.commit()
 
-    def add_rating(self, rating):
-        if rating <= 0 or rating > 5:
-            raise TypeError("invalid rating")
-        self.rating = round((self.rating*self.totalRatings + rating)/(self.totalRatings+1))
-        self.totalRatings += 1
-        db.session.commit()
-
     def serialize(self):
         return {
             'id': self.id,
@@ -128,7 +116,7 @@ class ProjectDBModel(db.Model):
             'lat': self.lat,
             'lon': self.lon,
             'favorites': FavoritesProjectDBModel.get_favorites_of_project_id(self.id),
-            'rating': self.rating
+            'rating': RatingDBModel.get_average_for_project(self.id)
         }
 
     @staticmethod

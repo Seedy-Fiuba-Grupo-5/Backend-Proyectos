@@ -1,14 +1,13 @@
 from flask import request
 from flask_restx import Namespace, Resource
-from prod.db_models.project_db_model import ProjectDBModel
+from prod.db_models.rating_db_model import RatingDBModel
 from prod.schemas.project_body import project_body
 from prod.schemas.project_representation import project_representation
-from prod.schemas.project_not_found import project_not_found,\
-    PROJECT_NOT_FOUND_ERROR
+from prod.schemas.missing_values import MISSING_VALUES_ERROR
 
 ns = Namespace(
     'projects/<int:project_id>/rate',
-    description='Project related operations'
+    description='Project rating related operations'
 )
 
 
@@ -18,20 +17,22 @@ class ProjectResource(Resource):
     body_swg = ns.model(project_body.name, project_body)
     code_200_swg = ns.model(project_representation.name,
                             project_representation)
-    code_404_swg = ns.model(project_not_found.name, project_not_found)
 
     @ns.expect(body_swg)
     @ns.response(200, 'Success', code_200_swg)
     def post(self, project_id):
         json = request.get_json()
-        project_model = ProjectDBModel.query.get(project_id)
-        if not project_model:
-            ns.abort(404, status=PROJECT_NOT_FOUND_ERROR)
+        if not json["id_user"] or not json["rating"]:
+            ns.abort(404, status=MISSING_VALUES_ERROR)
         try:
-            project_model.add_rating(rating=json.get('rating', -1))
+            RatingDBModel.add_rating(json["id_user"], project_id, json["rating"])
         except TypeError:
             ns.abort(400, status="The rating is not valid")
-        # Refresh project
-        project_model = ProjectDBModel.query.get(project_id)
-        response_object = project_model.serialize()
-        return response_object, 200
+        return RatingDBModel.get_rating_from_project_user(json["id_user"], project_id)
+
+    @ns.response(200, 'Success', code_200_swg)
+    def get(self, project_id):
+        if not request.args.get('id_user'):
+            ns.abort(404, status=MISSING_VALUES_ERROR)
+        return RatingDBModel.get_rating_from_project_user(id_user=request.args.get('id_user'),
+                                                          id_project=project_id)

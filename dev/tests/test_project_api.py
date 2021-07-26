@@ -158,21 +158,4 @@ def test_delete_project_id_no_elimina_el_proyecto(
     delete_data = json.loads(delete_resp.data.decode())
     assert delete_data['status'] == 'The project requested could not be found'
 
-def test_add_rating_to_project(test_app, test_database):
-    session = recreate_db(test_database)
-    session.add(ProjectDBModel(name='Project Rated', description='description', hashtags='#prueba',
-                               type='art', goal=1000, endDate='12/02/2021', location='Buenos Aires',
-                               image='www.an_image_url.com',
-                               createdOn='12/02/2021', path='a', lat=50, lon=20.5))
-    session.commit()
-    client = test_app.test_client()
-    response = client.post("/projects/1/rate", json={"rating": 5})
-    assert response.status_code == 200
-    project = json.loads(response.data.decode())
-    assert project['rating'] == 5
-    response = client.post("/projects/1/rate", json={"rating": 1})
-    assert response.status_code == 200
-    project = json.loads(response.data.decode())
-    assert project['rating'] == 3
-
 
