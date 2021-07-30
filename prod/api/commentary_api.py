@@ -43,7 +43,7 @@ class UsersListResource(BaseResource):
             json = request.get_json()
             token_decoded = CommentaryDBModel.decode_auth_token(json['token'])
             if token_decoded != json['id_user']:
-                ns.abort(404, status=USER_NOT_FOUND_ERROR)
+                ns.abort(401, status=USER_NOT_FOUND_ERROR)
             response_object = CommentaryDBModel.get_messages_from_project(
                 project_id)
             return response_object, 200
