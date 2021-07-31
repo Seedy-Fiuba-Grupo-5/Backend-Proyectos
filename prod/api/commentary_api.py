@@ -17,7 +17,7 @@ ns = Namespace(
 
 @ns.route('')
 class UsersListResource(BaseResource):
-    REGISTER_FIELDS = ("id_project", "user_id", "message", "token")
+    REGISTER_FIELDS = ("user_id", "message", "token")
     GET_FIELDS = ('id', 'token')
 
     code_status = {
