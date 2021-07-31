@@ -11,7 +11,7 @@ def test_post_commentary(test_app,
     client = test_app.test_client()
     body = {
         "id_project": 1,
-        "id_user": 1,
+        "user_id": 1,
         "message": "Di Maria",
         "token": CommentaryDBModel.encode_auth_token(1),
     }
@@ -31,7 +31,7 @@ def test_get_commentary(test_app,
     client = test_app.test_client()
     body = {
         "id_project": 1,
-        "id_user": 1,
+        "user_id": 1,
         "message": "Di Maria",
         "token": CommentaryDBModel.encode_auth_token(1)
     }
@@ -43,7 +43,7 @@ def test_get_commentary(test_app,
     assert response.status_code == 201
     body = {
         "id_project": 1,
-        "id_user": 1,
+        "user_id": 1,
         "message": "Di Maria",
         "token": CommentaryDBModel.encode_auth_token(1)
     }
@@ -54,7 +54,7 @@ def test_get_commentary(test_app,
     )
     assert response.status_code == 201
     body = {
-        "id_user": 1,
+        "user_id": 1,
         "token": CommentaryDBModel.encode_auth_token(1),
     }
     response = client.get(
