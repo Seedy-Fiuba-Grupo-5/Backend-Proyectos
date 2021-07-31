@@ -1,8 +1,9 @@
 from flask import request
 from flask_restx import Namespace, Resource
+from flask_restx import Model, fields
 from prod.db_models.favorites_db_model import FavoritesProjectDBModel
 from prod.schemas.project_body import project_body
-from prod.schemas.project_representation import project_representation
+from prod.schemas.missing_values import missing_values, MISSING_VALUES_ERROR
 from prod.schemas.project_not_found import project_not_found, \
     PROJECT_NOT_FOUND_ERROR
 from prod.db_models.project_db_model import ProjectDBModel
@@ -16,10 +17,17 @@ ns = Namespace(
 @ns.route('')
 @ns.param('project_id', description='The project identifier')
 class ProjectResource(Resource):
+    favorites_representation = Model('Users that have add to favorites the project ', {
+        'project_id':
+            fields.Integer(description='The project id'),
+        'users_id': fields.List(fields.Integer(description='a user id'))
+    })
+
     body_swg = ns.model(project_body.name, project_body)
-    code_200_swg = ns.model(project_representation.name,
-                            project_representation)
+    code_200_swg = ns.model(favorites_representation.name,
+                            favorites_representation)
     code_404_swg = ns.model(project_not_found.name, project_not_found)
+    code_400_swg = ns.model(missing_values.name, missing_values)
 
     @ns.response(200, 'Success', code_200_swg)
     @ns.response(404, PROJECT_NOT_FOUND_ERROR, code_404_swg)
@@ -36,6 +44,7 @@ class ProjectResource(Resource):
 
     @ns.response(200, 'Success', code_200_swg)
     @ns.response(404, PROJECT_NOT_FOUND_ERROR, code_404_swg)
+    @ns.response(400, MISSING_VALUES_ERROR, code_400_swg)
     def post(self, project_id):
         """Add project to user favorites"""
         project_model = ProjectDBModel.query.get(project_id)
@@ -51,10 +60,11 @@ class ProjectResource(Resource):
             }
             return response_object, 201
         except KeyError:
-            ns.abort(404, status='faltan valores')
+            ns.abort(404, status=MISSING_VALUES_ERROR)
 
     @ns.response(200, 'Success', code_200_swg)
     @ns.response(404, PROJECT_NOT_FOUND_ERROR, code_404_swg)
+    @ns.response(400, MISSING_VALUES_ERROR, code_400_swg)
     def delete(self, project_id):
         """Remove project to user favorites"""
         project_model = ProjectDBModel.query.get(project_id)
@@ -75,6 +85,6 @@ class ProjectResource(Resource):
                 }
                 return response_object, 200
             else:
-                ns.abort(404, status='PROJECT_NOT_FOUND')  # MEJORAR ESTE ERROR
+                ns.abort(404, status=PROJECT_NOT_FOUND_ERROR)
         except KeyError:
-            ns.abort(404, status='MISSING_VALUES_ERROR')  # MEJORAR ESTE ERROR
+            ns.abort(404, status=MISSING_VALUES_ERROR)
