@@ -157,5 +157,3 @@ def test_delete_project_id_no_elimina_el_proyecto(
     assert delete_resp.status_code == 404
     delete_data = json.loads(delete_resp.data.decode())
     assert delete_data['status'] == 'The project requested could not be found'
-
-
