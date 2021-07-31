@@ -27,7 +27,8 @@ class RatingDBModel(db.Model):
 
     @staticmethod
     def get_rating_from_project_user(id_user, id_project):
-        query = RatingDBModel.query.filter_by(id_user=id_user, id_project=id_project)
+        query = RatingDBModel.query.filter_by(
+            id_user=id_user, id_project=id_project)
         if len(query.all()) == 0:
             return {}
         response_object = \
@@ -38,10 +39,12 @@ class RatingDBModel(db.Model):
     def add_rating(cls, id_user, id_project, rating):
         if rating < 1 or rating > 5:
             raise TypeError("invalid rating")
-        query = RatingDBModel.query.filter_by(id_user=id_user, id_project=id_project)
+        query = RatingDBModel.query.filter_by(
+            id_user=id_user, id_project=id_project)
         if len(query.all()) != 0:
             item = query.first()
-            item.__init__(id_user=item.id_user, id_project=item.id_project, rating=rating)
+            item.__init__(id_user=item.id_user,
+                          id_project=item.id_project, rating=rating)
         else:
             db.session.add(RatingDBModel(id_user, id_project, rating))
         db.session.commit()

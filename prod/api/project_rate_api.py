@@ -25,7 +25,8 @@ class ProjectResource(Resource):
         if not json["id_user"] or not json["rating"]:
             ns.abort(404, status=MISSING_VALUES_ERROR)
         try:
-            RatingDBModel.add_rating(json["id_user"], project_id, json["rating"])
+            RatingDBModel.add_rating(
+                json["id_user"], project_id, json["rating"])
         except TypeError:
             ns.abort(400, status="The rating is not valid")
         return RatingDBModel.get_rating_from_project_user(json["id_user"], project_id)
