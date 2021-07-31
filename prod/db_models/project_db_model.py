@@ -17,7 +17,7 @@ class ProjectDBModel(db.Model):
                          nullable=False)
     type = db.Column(db.Enum(ProjectTypeEnum),
                      nullable=False)
-    goal = db.Column(db.Integer,
+    goal = db.Column(db.Float,
                      nullable=False)
     endDate = db.Column(db.String(128),
                         nullable=False)
