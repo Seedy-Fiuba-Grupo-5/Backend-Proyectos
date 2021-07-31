@@ -17,7 +17,7 @@ ns = Namespace(
 
 @ns.route('')
 class UsersListResource(BaseResource):
-    REGISTER_FIELDS = ("id_project", "id_user", "message", "token")
+    REGISTER_FIELDS = ("id_project", "user_id", "message", "token")
     GET_FIELDS = ('id', 'token')
 
     code_status = {
@@ -42,7 +42,7 @@ class UsersListResource(BaseResource):
         try:
             json = request.get_json()
             token_decoded = CommentaryDBModel.decode_auth_token(json['token'])
-            if token_decoded != json['id_user']:
+            if token_decoded != json['user_id']:
                 ns.abort(401, status=USER_NOT_FOUND_ERROR)
             response_object = CommentaryDBModel.get_messages_from_project(
                 project_id)
@@ -62,14 +62,14 @@ class UsersListResource(BaseResource):
                 ns.abort(400, status=MISSING_VALUES_ERROR,
                          missing_args=missing_args)
             token_decoded = CommentaryDBModel.decode_auth_token(data['token'])
-            id_user = data['id_user']
-            if token_decoded != id_user:
+            user_id = data['user_id']
+            if token_decoded != user_id:
                 ns.abort(404, status=USER_NOT_FOUND_ERROR)
             CommentaryDBModel.add_message(project_id,
                                           data['message'])
-            response_object = {'id_user': data['id_user'],
+            response_object = {'user_id': data['user_id'],
                                'token': CommentaryDBModel.encode_auth_token(
-                                   data['id_user'])}
+                                   data['user_id'])}
             return response_object, 201
         except BusinessError as e:
             code, status = self.code_status[e.__class__]
