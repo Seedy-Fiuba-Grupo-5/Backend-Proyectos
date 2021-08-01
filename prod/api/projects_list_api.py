@@ -51,14 +51,16 @@ class ProjectsListResource(Resource):
             if hashtag:
                 response = response.filter(
                     ProjectDBModel.hashtags.contains(hashtag))
-        if request.args.get('lat') and request.args.get('lon') and request.args.get('radio'):
+        if request.args.get('lat') and request.args.get('lon') \
+            and request.args.get('radio'):
             lat = radians(float(request.args.get('lat')))
             lon = radians(float(request.args.get('lon')))
             radio_km = float(request.args.get('radio'))
             new_response = []
             for item in response:
                 distancia_km = 6371.01 * acos(
-                    sin(lat) * sin(radians(item.lat)) + cos(lat) * cos(radians(item.lat)) * cos(
+                    sin(lat) * sin(radians(item.lat)) + cos(lat) * cos(
+                        radians(item.lat)) * cos(
                         lon - radians(item.lon)))
                 if distancia_km <= radio_km:
                     new_response.append(item.id)

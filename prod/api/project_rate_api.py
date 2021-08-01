@@ -29,11 +29,13 @@ class ProjectResource(Resource):
                 json["id_user"], project_id, json["rating"])
         except TypeError:
             ns.abort(400, status="The rating is not valid")
-        return RatingDBModel.get_rating_from_project_user(json["id_user"], project_id)
+        return RatingDBModel.get_rating_from_project_user(json["id_user"],
+                                                          project_id)
 
     @ns.response(200, 'Success', code_200_swg)
     def get(self, project_id):
         if not request.args.get('id_user'):
             ns.abort(404, status=MISSING_VALUES_ERROR)
-        return RatingDBModel.get_rating_from_project_user(id_user=request.args.get('id_user'),
-                                                          id_project=project_id)
+        return RatingDBModel.get_rating_from_project_user(
+            id_user=request.args.get('id_user'),
+            id_project=project_id)

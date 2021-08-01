@@ -17,7 +17,8 @@ ns = Namespace(
 @ns.route('')
 @ns.param('project_id', description='The project identifier')
 class ProjectResource(Resource):
-    favorites_representation = Model('Users that have add to favorites the project ', {
+    favorites_representation = Model(('Users that have add to favorites the '
+                                      'project '), {
         'project_id':
             fields.Integer(description='The project id'),
         'users_id': fields.List(fields.Integer(description='a user id'))
