@@ -22,7 +22,7 @@ def upgrade():
                     sa.Column('id', sa.Integer(), nullable=False),
                     sa.Column('name', sa.String(length=128), nullable=False),
                     sa.Column('description', sa.String(
-                        length=128), nullable=False),
+                        length=5000), nullable=False),
                     sa.Column('hashtags', sa.String(
                         length=1000), nullable=False),
                     sa.Column('type', sa.String(length=128), nullable=False),

@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask_restx import Namespace, Resource, fields
-from flask_restx import Model
+from prod.schemas.projects_metrics import metrics_representation
 
 from prod.db_models.project_db_model import ProjectDBModel
 from prod.schemas.project_options import ProjectTypeEnum
@@ -13,18 +13,10 @@ ns = Namespace(
 
 @ns.route('')
 class ProjectsListResource(Resource):
-    metrics_representation = Model('ProjectMetrics', {
-        'most_popular_type':
-            fields.Integer(description='Most popular type '
-                                       'of project'),
-        'avg_goal': fields.Integer(description='Average project goal'),
-        'avg_duration': fields.Integer(
-            description='Average project duration in months')
-    })
     code_20x_swg = ns.model(metrics_representation.name,
                             metrics_representation)
 
-    @ns.response(200, 'Success', fields.List(fields.Nested(code_20x_swg)))
+    @ns.response(200, 'Success', code_20x_swg)
     def get(self):
         response_body = {"most_popular_type": self.get_most_popular_type(),
                          "avg_goal": self.calculate_avg_goal(),

@@ -7,7 +7,13 @@ DESCRIPTIONS = {
     'goal': 'The project goal',
     'endDate': 'The project end date',
     'location': 'The project location',
-    'image': 'The project image url'
+    'image': 'The project image url',
+    'video': 'The project video url',
+    'seer': 'The project seer url',
+    'lat': 'The project location latitude',
+    'lon': 'The project location longitude',
+    'createdOn': 'The project date of creation',
+    'path': 'The project firebase directory path'
 }
 
 PROJECT_FIELDS = ['name', 'description', 'hashtags', 'type',

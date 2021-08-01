@@ -11,7 +11,7 @@ class ProjectDBModel(db.Model):
                    primary_key=True)
     name = db.Column(db.String(128),
                      nullable=False)
-    description = db.Column(db.String(128),
+    description = db.Column(db.String(5000),
                             nullable=False)
     hashtags = db.Column(db.String(1000),
                          nullable=False)
