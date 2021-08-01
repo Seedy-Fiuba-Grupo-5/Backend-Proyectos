@@ -1,7 +1,7 @@
 """Initial migration
 
 Revision ID: 142e9ab35c0b
-Revises: 
+Revises:
 Create Date: 2021-06-23 13:49:30.912572
 
 """
@@ -26,7 +26,7 @@ def upgrade():
                     sa.Column('hashtags', sa.String(
                         length=1000), nullable=False),
                     sa.Column('type', sa.String(length=128), nullable=False),
-                    sa.Column('goal', sa.Integer(), nullable=False),
+                    sa.Column('goal', sa.Float(), nullable=False),
                     sa.Column('endDate', sa.String(
                         length=128), nullable=False),
                     sa.Column('location', sa.String(
