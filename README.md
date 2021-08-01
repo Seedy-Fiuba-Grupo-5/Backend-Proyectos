@@ -5,21 +5,45 @@
 [![Develop](https://github.com/Seedy-Fiuba-Grupo-5/Backend-Proyectos/actions/workflows/develop.yml/badge.svg?branch=develop)](https://github.com/Seedy-Fiuba-Grupo-5/Backend-Proyectos/actions/workflows/develop.yml)
 [![codecov](https://codecov.io/gh/Seedy-Fiuba-Grupo-5/Backend-Proyectos/branch/develop/graph/badge.svg)](https://codecov.io/gh/Seedy-Fiuba-Grupo-5/Backend-Proyectos/branch/develop)
 
+Servicio de proyectos de Seedyfiuba
+
 ## Tecnologias
 - Flask (framework del servicio web)
 - Postgres (Base de datos)
 
+## Configuración local y en Heroku
+#### Variables de entorno
+- `DATABASE_URL`: URL de la base de datos de postgres
+
+### Solo localmente
+- `DATABASE_TEST_URL`: URL de la base de datos de _testing_
+
+### Solo en Heroku
+- `DD_AGENT_MAJOR_VERSION`=7
+- `DD_API_KEY`: API KEY de la cuenta de Datadog
+- `DD_APM_ENABLED`=true
+- `DD_DOGSTATSD_NON_LOCAL_TRAFFIC`=true
+- `DD_DYNO_HOST`=false
+- `DD_SITE`=datadogghq.com
+
 ## Entorno Local
+
+### Requerimientos
+- docker (Docker version 20.10.7, build f0df350)
+- docker-compose (docker-compose version 1.29.1, build c34c88b2)
 
 ### Construccion
 ```
-docker-compose build --remove-orphans
+docker-compose build
 ```
 
 ### Levantar servicios
 ```
-docker-compose up
+docker-compose up [-d]
 ```
+Este comando levantará los siguientes servicios:
+- `service_projects_web`: Servicio web
+- `service_projects_db`: Base de datos
 
 ### Pruebas: pytest & flake8
 pytest: libreria de python para 'testing'.
@@ -33,7 +57,7 @@ flake8: 'linter' de python, basado en los lineamientos de pep8.
 Nota 1: Este script requiere que los servicios se encuetren levantados.
 Nota 2: Este script esperara hasta que la base de datos se haya inicializado.
 
-3) Se pueden realizar cambios en el codigo y los servicios (en ejecucion), los detectaran y se actualizaran, permaneciendo en ejecucion.
+3) Se pueden realizar cambios en el codigo y los servicios (en ejecucion) los detectaran y se actualizaran, permaneciendo en ejecucion.
 
 ### Autopep8
 autopep8: Formatea el codigo de python para que se adecuado a los
@@ -113,29 +137,29 @@ heroku ps:scale web=0 --app seedy-fiuba-backend-projects
 heroku pg:psql --app seedy-fiuba-backend-projects
 ```
 
-## Migraciones (ambos entornos)
+## Migraciones locales y en Heroku
 ### Crear carpeta migrations/
 Crear carpeta migrations:
 ```
 docker-compose exec service_projects_web flask db init
 ```
+Nota: Solo hace falta crear esta carpeta una vez en todo el proyecto.
 
 ### Agregar nueva migración
 Ejecutar con el servicio levantado.
 ```
 docker-compose exec service_projects_web flask db migrate -m "descripción de la migración"
 ```
+Nota: la "descripción de la migracion" se le reemplaran los espacios por guiones bajos, y se le agregara un numero versión delante la misma. Estas versiones se guardan en la carpeta `migrations/versions/`
 
 ### Actualizar la base de datos con las nuevas migraciones
 ```
 docker-compose exec service_projects_web flask db upgrade
 ```
 Nota 1: Manualmente, se debe agregar las nuevas migraciones
-a traves del comando `flask db migrate` descrito en la sección
-anterior. Esto es gran importancia antes de subir la nueva
-instancia de la aplicacion a Heroku.
+a traves del comando `flask db migrate` descrito en la sección anterior. Esto es de gran importancia antes de subir la nueva instancia de la aplicacion a Heroku.
 
 Nota 2: Este comando ya es invocado desde el archivo
-docker-entrypoint.sh antes de invocar a la aplicación web.
+`docker-entrypoint.sh` antes de invocar a la aplicación web.
 
 
